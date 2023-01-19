@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router'
-import {blue,pink} from '@mui/material/colors'
+import { blue, pink } from '@mui/material/colors'
+
 
 function Copyright(props: any) {
   return (
@@ -28,17 +29,52 @@ function Copyright(props: any) {
   );
 }
 
+
+interface ApiData {
+  name: string;
+  phoneNumber: number;
+  email: string;
+  password: string;
+}
+
+interface ResponseType {
+  message: string;
+  errors: [];
+}
+
 const theme = createTheme({
   palette: {
     primary: {
       main: 'rgb(0, 0, 0)',
     }
-    
+
   },
 });
 
+
+// enum methods
+import { methods } from "../api/api";
+
+import { callAPI } from "../api/api";
+
+
 export default function SignUp() {
   const router = useRouter()
+
+  const [fields, setFields] = useState({
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    email: "",
+    password: "",
+  });
+
+  const handlefields = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { target } = event;
+    const { name, value } = target;
+    let newFields = { ...fields, [name]: value };
+    setFields(newFields);
+  };
 
   const changeToRoute = (route: string) => {
 
@@ -49,14 +85,65 @@ export default function SignUp() {
 
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const handleSaveParty = async () => {
+    // setLoader(true);
+
+    let {
+      firstName,
+      lastName,
+      mobileNumber,
+      email,
+      password,
+    } = fields;
+    const name = fields.firstName + fields.lastName
+    if (name.trim() !== "") {
+      if (mobileNumber.trim() !== "") {
+        if (fields.mobileNumber.length == 10) {
+          if (email.trim() !== "") {
+            const params: ApiData = {
+              name,
+              phoneNumber: +mobileNumber,
+              email,
+              password
+            };
+
+            const response: ResponseType = await callAPI("signin", params);
+
+            const { message, errors } = response;
+            if (message === "success") {
+              alert(
+                "Details saved successfully"
+              );
+            } else if (message === "failure") {
+              errors.map((errorObject) => {
+                const { errorMessage } = errorObject;
+                alert(errorMessage);
+              });
+            } else {
+              alert("Some Server error");
+            }
+
+          }
+          else {
+            alert("Please enter a valid email");
+          }
+        }
+        else {
+          alert("Please enter a valid mobile number");
+        }
+
+
+
+      }
+      else {
+        alert("Please enter a valid mobile number");
+      }
+    } else {
+      alert("Please enter a valid Name");
+    }
   };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,10 +160,10 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" style = {{color: 'black'}}>
+          <Typography component="h1" variant="h5" style={{ color: 'black' }}>
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSaveParty} >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -87,6 +174,8 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={handlefields}
+                  value={fields.firstName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -97,6 +186,20 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={handlefields}
+                  value={fields.lastName}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="mobileNumber"
+                  label="Phone No."
+                  name="mobileNumber"
+                  autoComplete="mobileNumber"
+                  onChange={handlefields}
+                  value={fields.mobileNumber}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -107,7 +210,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  
+                  onChange={handlefields}
+                  value={fields.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -119,6 +223,8 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={handlefields}
+                  value={fields.password}
                 />
               </Grid>
               {/* <Grid item xs={12}>
@@ -137,7 +243,7 @@ export default function SignUp() {
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
-              <Grid item onClick={changeToRoute("/test")} style = {{color:"black"}}>
+              <Grid item onClick={changeToRoute("/test")} style={{ color: "black" }}>
 
                 Already have an account? Sign in
 

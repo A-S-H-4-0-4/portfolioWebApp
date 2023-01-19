@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -42,43 +42,75 @@ declare module '@mui/material/styles' {
 }
 
 const theme = createTheme({
-  
-    palette: {
-      primary: {
-        main: 'rgb(0, 0, 0)',
-      },
-      secondary: {
-        main: green[500],
-      },
+
+  palette: {
+    primary: {
+      main: 'rgb(0, 0, 0)',
     },
-   
-  
-  });
+    secondary: {
+      main: green[500],
+    },
+  },
+
+
+});
+
+
+
+interface ResponseType {
+  message: string;
+  data: {};
+  errors: [];
+}
+
+
+
+// enum methods
+import { methods } from "../api/api";
+
+import { callAPI } from "../api/api";
 
 export default function SignIn() {
 
-const router =useRouter()
 
-const changeToRoute = (route: string) => {
 
-  return () => {
+  const router = useRouter()
 
-    router.push(route)
+  const changeToRoute = (route: string) => {
+
+    return () => {
+
+      router.push(route)
+    }
+
   }
-
-}
   const styles = {
     backgroundColor: "white"
   }
 
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const value = new FormData(event.currentTarget);
+    const params = {
+      email: value.get('email'),
+      password: value.get('password'),
+    };
+    const response: ResponseType = await callAPI("signin", params);
+
+    const { message, data, errors } = response;
+    if (message === "success") {
+      if (typeof data === "object") {
+        console.log(data);
+      }
+    } else if (message === "failure") {
+      errors.map((errorObject) => {
+        const { errorMessage } = errorObject;
+        alert(errorMessage);
+      });
+    } else {
+      alert("Some Server error");
+    }
   };
 
   return (
@@ -96,20 +128,18 @@ const changeToRoute = (route: string) => {
           <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" style = {{color: 'black'}}>
+          <Typography component="h1" variant="h5" style={{ color: 'black' }}>
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
-              margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            
+              id="mobileNumber"
+              label="Phone No."
+              name="mobileNumber"
+              autoComplete="mobileNumber"
+
             />
             <TextField
               margin="normal"
@@ -120,7 +150,8 @@ const changeToRoute = (route: string) => {
               type="password"
               id="password"
               autoComplete="current-password"
-              // color="primary"
+
+            // color="primary"
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -141,9 +172,9 @@ const changeToRoute = (route: string) => {
                 </Link>
               </Grid> */}
               <Grid item onClick={changeToRoute("/test")}>
-                
-                  {"Don't have an account? Sign Up"}
-                
+
+                {"Don't have an account? Sign Up"}
+
               </Grid>
             </Grid>
           </Box>
