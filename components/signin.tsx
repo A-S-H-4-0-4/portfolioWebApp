@@ -13,7 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -69,21 +70,22 @@ interface ResponseType {
 import { methods } from "../api/api";
 
 import { callAPI } from "../api/api";
+import { saveData } from '../local/storage';
 
 export default function SignIn() {
 
 
 
-  const router = useRouter()
+  // const router = useRouter()
 
-  const changeToRoute = (route: string) => {
+  // const changeToRoute = (route: string) => {
 
-    return () => {
+  //   return () => {
 
-      router.push(route)
-    }
+  //     router.push(route)
+  //   }
 
-  }
+  // }
   const styles = {
     backgroundColor: "white"
   }
@@ -93,15 +95,20 @@ export default function SignIn() {
     event.preventDefault();
     const value = new FormData(event.currentTarget);
     const params = {
-      email: value.get('email'),
+      phoneNumber: value.get('mobileNumber'),
       password: value.get('password'),
     };
-    const response: ResponseType = await callAPI("signin", params);
+    const response: ResponseType = await callAPI("login", params);
 
     const { message, data, errors } = response;
     if (message === "success") {
       if (typeof data === "object") {
         console.log(data);
+        if (saveData("session",data['sessionKey'])) {
+          Router.push("/home")
+          return 
+        }
+        alert("Login error please try again")
       }
     } else if (message === "failure") {
       errors.map((errorObject) => {
@@ -171,8 +178,7 @@ export default function SignIn() {
                   Forgot password?
                 </Link>
               </Grid> */}
-              <Grid item onClick={changeToRoute("/test")}>
-
+              <Grid item >
                 {"Don't have an account? Sign Up"}
 
               </Grid>

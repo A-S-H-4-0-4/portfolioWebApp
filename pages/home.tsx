@@ -1,4 +1,3 @@
-
 // style
 import H from "../styles/home.module.css";
 
@@ -15,6 +14,7 @@ import SignUp from "../components/signup";
 import MultiActionAreaCard from "../components/card";
 import { homedir } from "os";
 import Footer from "../components/footer";
+import { getData } from "../local/storage";
 
 // image
 const bannerImage = "/images/banner.jpg"
@@ -26,7 +26,7 @@ const Home = () => {
   const [textcolor, setTextColor] = React.useState('black')
   const [backgroundColor, setbackgroundColor] = React.useState('white')
   const [matches, setMatches] = useState(false);
-
+  const [session,setSession] = useState("")
   if (typeof window !== "undefined") {
     window.matchMedia("(min-width: 900px)").matches;
   }
@@ -35,10 +35,15 @@ const Home = () => {
     window
       .matchMedia("(max-width: 900px)")
       .addEventListener("change", (e) => setMatches(e.matches));
+  const value:string = getData("session")
+  if (value !== null) {
+    setSession(value)
+  }  
+
   }, []);
   return (
     <React.Fragment>
-      <div className={H.screen} style={{ backgroundColor: backgroundColor, height: "auto", width: "100%", display: "flex", flexDirection: "column" }}>
+      {session===""?<div></div>:<div className={H.screen} style={{ backgroundColor: backgroundColor, height: "auto", width: "100%", display: "flex", flexDirection: "column" }}>
         <ResponsiveAppBar callBack={() => {
           if (color == "white") {
             setColor("rgb(53, 53, 53)");
@@ -84,7 +89,7 @@ const Home = () => {
           </div>
         </div>
         <Footer />
-      </div>
+      </div>}
 
 
     </React.Fragment>
