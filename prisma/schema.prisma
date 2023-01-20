@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://dbUser:REHzn5LpvKj5A-f@cluster0.r1mjbmp.mongodb.net/portfolioWebApp?retryWrites=true&w=majority"
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  expires      DateTime
+  userId       String   @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
+}
+
+model User {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  phoneNumber String        @unique
+  email       String
+  password    String
+  createdAt   DateTime      @default(now()) @map("created_at")
+  project     Project[]
+  session     Session[]
+  userProfile UserProfile[]
+}
+
+model UserProfile {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  emailAddress String
+  userImage    String?
+  bannerImage  String?
+  gitHub       String?
+  linkedIn     String?
+  instaGram    String?
+  gitLab       String?
+  twitter      String?
+  userid       String @unique @db.ObjectId
+  user         User   @relation(fields: [userid], references: [id])
+}
+
+model Project {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  videoUrl       String
+  thumbnailurl   String
+  discription    String
+  date           DateTime         @default(now())
+  userId         String           @db.ObjectId
+  user           User             @relation(fields: [userId], references: [id])
+  techStak       TechStak[]
+  projectContent ProjectContent[]
+}
+
+model TechStak {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String
+  content   String
+  createdAt DateTime @default(now())
+  projectId String   @db.ObjectId
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model ProjectContent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      type     @default(code)
+  content   String
+  createdAt DateTime @default(now())
+  language  String   @default("text")
+  projectId String   @db.ObjectId
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+enum type {
+  heading
+  subHeading
+  code
+  text
+}
