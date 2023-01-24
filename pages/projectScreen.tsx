@@ -1,7 +1,9 @@
 // styles
 import PS from "../styles/projectScreen.module.css";
+
 // react
 import React, { useEffect, useState } from "react";
+import Highlight from 'react-highlight'
 
 // components
 import ResponsiveAppBar from "../components/navbar";
@@ -20,7 +22,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import EditIcon from "@mui/icons-material/Edit";
-
+import  {storage} from '../firebaseConfig'
 // Video player
 import "node_modules/video-react/dist/video-react.css";
 import { Player } from "video-react";
@@ -42,6 +44,7 @@ const ProjectScreen = () => {
 
 
   const handleContent = (type: string, content: string) => {
+    
     let newList = [...contentList];
     if (cIndex === -1) {
       newList.push({ type: type, content: content });
@@ -55,8 +58,10 @@ const ProjectScreen = () => {
     changeText("");
   };
   const handleStack = (type: string, content: string,index: number) => {
+    
     let newList = [...stackList];
-    if (index === -1) {
+    if (index === -1){
+
       newList.push({ type: type, content: content });
     } else {
       newList[index] = { type: type, content: content };
@@ -72,6 +77,7 @@ const ProjectScreen = () => {
 
   return (
     <React.Fragment>
+      
       <div className={PS.screen} style={{ background: "white" }}>
         <ResponsiveAppBar
           callBack={() => {}}
@@ -122,8 +128,11 @@ const ProjectScreen = () => {
             />
           </div>
           <div className={PS.bar}>
-            <Bar text={"nextjs"} type={"Framework"} />
-            <Bar text={"nextjs"} type={"Framework"} />
+            {stackList.map(({type,content})=>{
+              return <Bar text={content} type = {type} /> 
+            })}
+            
+           
           </div>
         </div>
 
@@ -405,6 +414,9 @@ const ProjectScreen = () => {
 };
 
 const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
+    const [techStackName,setTechStackName] = useState("")
+    const [fieldName,setName] = useState("")
+  
   return (
     <div className={PS.glass}>
       <div
@@ -441,7 +453,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
           >
             Add TechStack
             <text
-              style={{
+              style = {{
                 marginRight: "10px",
                 display: "flex",
                 alignItems: "center",
@@ -457,7 +469,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
           </span>
         </div>
 
-        <div className={PS.details} style={{ width: "90%", marginLeft: "3%" }}>
+        <div className = {PS.details} style={{ width: "90%", marginLeft: "3%" }}>
           <span>TechStack</span>
           <input
             style={{
@@ -470,6 +482,9 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             type="name"
             name="TechStackName"
             placeholder="Enter TechStack Name"
+            onChange={(event)=>{
+              setTechStackName(event.target.name)
+            }}
           ></input>
         </div>
         <div className={PS.details} style={{ width: "90%", marginLeft: "3%" }}>
@@ -484,11 +499,17 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             }}
             type="name"
             name="TechStackName"
+            onChange={(event)=>{
+              setName(event.target.name)           
+            }}
             placeholder="Enter TechStack Name"
           ></input>
         </div>
         <div style={{ display: "flex" }}>
           <button
+          onClick={()=>{
+            save(techStackName,fieldName,-1)
+          }}
             style={{
               height: "30px",
               width: "20%",

@@ -13,7 +13,7 @@ import { Player } from 'video-react';
 
 
 import MyCoolCodeBlock from "../components/codeBlock";
-import { CodeBlock } from "react-code-blocks";
+// import { CodeBlock } from "react-code-blocks";
 
 const exampleCodeBlock = `def print_pattern():
 size = 4
