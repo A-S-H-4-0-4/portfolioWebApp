@@ -3,7 +3,10 @@ import PS from "../styles/projectScreen.module.css";
 
 // react
 import React, { useEffect, useState } from "react";
-import Highlight from 'react-highlight'
+import Highlight from "react-highlight";
+
+//  firebase
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // components
 import ResponsiveAppBar from "../components/navbar";
@@ -22,13 +25,14 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import EditIcon from "@mui/icons-material/Edit";
-import  {storage} from '../firebaseConfig'
+import { storage } from "../firebaseConfig";
 // Video player
 import "node_modules/video-react/dist/video-react.css";
 import { Player } from "video-react";
 
 // muit tooltip
 import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
 
 const ProjectScreen = () => {
   // State Management
@@ -37,14 +41,62 @@ const ProjectScreen = () => {
   const [contentList, addContent] = useState([]);
   const [stackList, addStack] = useState([]);
   const [contentType, changeCType] = useState("heading");
-
   const [contentText, changeText] = useState("");
   const [cIndex, changeCindex] = useState(-1);
   const [sIndex, changeSindex] = useState(-1);
+  const [imageFile, setImageFile] = useState<File>();
+  const [downloadURL, setDownloadURL] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [progressUpload, setProgressUpload] = useState(0);
+  const handleSelectedFile = (event: any) => {
+    const files = event.target.files;
+    console.log(files);
+    
+    if (files && files[0].size < 20000000) {
+       setImageFile(files[0]);
 
+      console.log(files[0]);
+    } else {
+    }
+  };
+  
+  const handleUploadFile = () => {
+    if (imageFile) {
+      const name = imageFile.name;
+      const storageRef = ref(storage, `image/${name}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+          
+          setProgressUpload(progress); // to show progress upload
+
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {},
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            //url is download url of file
+            setDownloadURL(url);
+          });
+        }
+      );
+    } else {
+    }
+  };
 
   const handleContent = (type: string, content: string) => {
-    
     let newList = [...contentList];
     if (cIndex === -1) {
       newList.push({ type: type, content: content });
@@ -57,11 +109,9 @@ const ProjectScreen = () => {
     changeCType("heading");
     changeText("");
   };
-  const handleStack = (type: string, content: string,index: number) => {
-    
+  const handleStack = (type: string, content: string, index: number) => {
     let newList = [...stackList];
-    if (index === -1){
-
+    if (index === -1) {
       newList.push({ type: type, content: content });
     } else {
       newList[index] = { type: type, content: content };
@@ -77,7 +127,6 @@ const ProjectScreen = () => {
 
   return (
     <React.Fragment>
-      
       <div className={PS.screen} style={{ background: "white" }}>
         <ResponsiveAppBar
           callBack={() => {}}
@@ -85,6 +134,9 @@ const ProjectScreen = () => {
           colour={"white"}
         />
         <div className={PS.selctType} style={{ background: "rgb(20, 21, 21)" }}>
+        <Button
+        onClick={handleUploadFile}
+        variant="contained" sx={{mx:2}}>Contained</Button>
           <div style={{ width: "20%" }}>
             <Tooltip
               title="Add TechStack"
@@ -104,18 +156,32 @@ const ProjectScreen = () => {
             >
               <PostAddIcon />
             </Tooltip>
-            <Tooltip
-              title="Add Thumbnail"
+            
+              <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+              <Tooltip
+              title="Add Thumbnail Image"
               sx={{ cursor: "pointer", color: "white" }}
             >
-              <AddPhotoAlternateIcon />
-            </Tooltip>
-            <Tooltip
+                <AddPhotoAlternateIcon
+                  sx={{ color: "white" }}
+                />
+                </Tooltip>
+              </label>
+              <input type="file" id="imageUpload" hidden></input>
+            
+
+              <label htmlFor="videoUpload" style={{ cursor: "pointer" }}>
+              <Tooltip
               title="Add Video"
               sx={{ cursor: "pointer", color: "white" }}
             >
-              <VideoCallIcon />
-            </Tooltip>
+                <VideoCallIcon
+                  sx={{ color: "white" }}
+                />
+                </Tooltip>
+              </label>
+              <input type="file" id="videoUpload" onChange={handleSelectedFile} hidden></input>
+
           </div>
         </div>
 
@@ -128,11 +194,9 @@ const ProjectScreen = () => {
             />
           </div>
           <div className={PS.bar}>
-            {stackList.map(({type,content})=>{
-              return <Bar text={content} type = {type} /> 
+            {stackList.map(({ type, content }) => {
+              return <Bar text={content} type={type} />;
             })}
-            
-           
           </div>
         </div>
 
@@ -331,24 +395,26 @@ const ProjectScreen = () => {
               <option value="subHeading">Sub Heading</option>
               <option value="text">Text</option>
             </select>
-           
-            { contentType === "snippet" && <div
-              className={PS.details}
-              style={{ width: "90%", marginLeft: "3%", marginTop: "20px" }}
-            >
-              <input
-                style={{
-                  // marginLeft: "2%",
-                  height: "30px",
-                  width: "60%",
-                  borderRadius: "3px",
-                  border: "1px solid black",
-                }}
-                type="name"
-                name="TechStackName"
-                placeholder="Enter Language name(eg python,jsx,java)"
-              ></input>
-            </div>}
+
+            {contentType === "snippet" && (
+              <div
+                className={PS.details}
+                style={{ width: "90%", marginLeft: "3%", marginTop: "20px" }}
+              >
+                <input
+                  style={{
+                    // marginLeft: "2%",
+                    height: "30px",
+                    width: "60%",
+                    borderRadius: "3px",
+                    border: "1px solid black",
+                  }}
+                  type="name"
+                  name="TechStackName"
+                  placeholder="Enter Language name(eg python,jsx,java)"
+                ></input>
+              </div>
+            )}
             <div
               className={PS.details}
               style={{ width: "90%", marginTop: "30px" }}
@@ -414,9 +480,9 @@ const ProjectScreen = () => {
 };
 
 const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
-    const [techStackName,setTechStackName] = useState("")
-    const [fieldName,setName] = useState("")
-  
+  const [techStackName, setTechStackName] = useState("");
+  const [fieldName, setName] = useState("");
+
   return (
     <div className={PS.glass}>
       <div
@@ -453,7 +519,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
           >
             Add TechStack
             <text
-              style = {{
+              style={{
                 marginRight: "10px",
                 display: "flex",
                 alignItems: "center",
@@ -469,7 +535,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
           </span>
         </div>
 
-        <div className = {PS.details} style={{ width: "90%", marginLeft: "3%" }}>
+        <div className={PS.details} style={{ width: "90%", marginLeft: "3%" }}>
           <span>TechStack</span>
           <input
             style={{
@@ -482,8 +548,8 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             type="name"
             name="TechStackName"
             placeholder="Enter TechStack Name"
-            onChange={(event)=>{
-              setTechStackName(event.target.name)
+            onChange={(event) => {
+              setTechStackName(event.target.name);
             }}
           ></input>
         </div>
@@ -499,17 +565,17 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             }}
             type="name"
             name="TechStackName"
-            onChange={(event)=>{
-              setName(event.target.name)           
+            onChange={(event) => {
+              setName(event.target.name);
             }}
             placeholder="Enter TechStack Name"
           ></input>
         </div>
         <div style={{ display: "flex" }}>
           <button
-          onClick={()=>{
-            save(techStackName,fieldName,-1)
-          }}
+            onClick={() => {
+              save(techStackName, fieldName, -1);
+            }}
             style={{
               height: "30px",
               width: "20%",
