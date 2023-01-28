@@ -11,7 +11,7 @@ interface ResponseType {
 // export default handler;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-//   await getSession(req);
+
 
   const { method } = req;
 console.log(method);

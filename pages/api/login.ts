@@ -27,6 +27,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const body = req.body;
       let { phoneNumber, password } = body;
+      console.log(body);
+      
       const result = await prisma.user.findFirst({
         where: {
           phoneNumber: (phoneNumber === undefined || phoneNumber === null) ? "" : phoneNumber,

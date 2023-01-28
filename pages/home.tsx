@@ -4,6 +4,9 @@ import H from "../styles/home.module.css";
 // react
 import React, { useEffect, useState } from "react";
 
+// context
+import { useWrapper } from "../lib/contextApi";
+
 // router
 import { useRouter } from "next/router";
 
@@ -21,12 +24,15 @@ const bannerImage = "/images/banner.jpg"
 
 
 const Home = () => {
+  const router = useRouter()
   const [color, setColor] = React.useState('white')
   const [headcolor, setHeadColor] = React.useState('black')
   const [textcolor, setTextColor] = React.useState('black')
   const [backgroundColor, setbackgroundColor] = React.useState('white')
   const [matches, setMatches] = useState(false);
-  const [session,setSession] = useState("")
+  const {session} = useWrapper()
+
+
   if (typeof window !== "undefined") {
     window.matchMedia("(min-width: 900px)").matches;
   }
@@ -35,10 +41,10 @@ const Home = () => {
     window
       .matchMedia("(max-width: 900px)")
       .addEventListener("change", (e) => setMatches(e.matches));
-  const value:string = getData("session")
-  if (value !== null) {
-    setSession(value)
-  }  
+    
+      if (!session) {
+        router.back()
+      }
 
   }, []);
   return (
