@@ -1,15 +1,15 @@
-// import { CodeBlock, dracula } from "react-code-blocks";
+import React from 'react';
 
-const MyCoolCodeBlock = ({ code, language }) => {
+import { CodeBlock } from '@atlaskit/code';
+import GlobalTheme from '@atlaskit/theme/components';
+
+const CodeBlockDefaultExample = ({ language, text , theme}) => {
+const mode = theme
   return (
-    <div></div>
-    // <CodeBlock
-    //   text={code}
-    //   language={language}
-    //   theme={dracula}
-    // />
+    <GlobalTheme.Provider value={() => ({ mode })}>
+      <CodeBlock language={language} text={text} />
+    </GlobalTheme.Provider>
   );
-}
+};
 
-
-export default MyCoolCodeBlock
+export default CodeBlockDefaultExample;

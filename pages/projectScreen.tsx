@@ -16,8 +16,8 @@ import Bar from "../components/bar";
 // router
 import { useRouter } from "next/router";
 
-// sode snippet
-import MyCoolCodeBlock from "../components/codeBlock";
+// code snippet
+import CodeBlockDefaultExample from "../components/codeBlock";
 
 // mui icons
 import VideoCallIcon from "@mui/icons-material/VideoCall";
@@ -29,6 +29,8 @@ import { storage } from "../firebaseConfig";
 // Video player
 import "node_modules/video-react/dist/video-react.css";
 import { Player } from "video-react";
+import Plyr from "plyr-react"
+import "plyr-react/plyr.css"
 
 // muit tooltip
 import Tooltip from "@mui/material/Tooltip";
@@ -42,6 +44,7 @@ const ProjectScreen = () => {
   const [stackList, addStack] = useState([]);
   const [contentType, changeCType] = useState("heading");
   const [contentText, changeText] = useState("");
+  const [contentLanguage, changeLanguage] = useState("text");
   const [cIndex, changeCindex] = useState(-1);
   const [sIndex, changeSindex] = useState(-1);
   const [imageFile, setImageFile] = useState<File>();
@@ -51,15 +54,15 @@ const ProjectScreen = () => {
   const handleSelectedFile = (event: any) => {
     const files = event.target.files;
     console.log(files);
-    
+
     if (files && files[0].size < 20000000) {
-       setImageFile(files[0]);
+      setImageFile(files[0]);
 
       console.log(files[0]);
     } else {
     }
   };
-  
+
   const handleUploadFile = () => {
     if (imageFile) {
       const name = imageFile.name;
@@ -72,7 +75,7 @@ const ProjectScreen = () => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log(progress);
-          
+
           setProgressUpload(progress); // to show progress upload
 
           switch (snapshot.state) {
@@ -84,7 +87,7 @@ const ProjectScreen = () => {
               break;
           }
         },
-        (error) => {},
+        (error) => { },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             //url is download url of file
@@ -96,12 +99,12 @@ const ProjectScreen = () => {
     }
   };
 
-  const handleContent = (type: string, content: string) => {
+  const handleContent = (type: string, content: string, language: string) => {
     let newList = [...contentList];
     if (cIndex === -1) {
-      newList.push({ type: type, content: content });
+      newList.push({ type: type, content: content, language: language });
     } else {
-      newList[cIndex] = { type: type, content: content };
+      newList[cIndex] = { type: type, content: content, language: language };
     }
     addContent(newList);
     setShowAddContent(false);
@@ -129,14 +132,14 @@ const ProjectScreen = () => {
     <React.Fragment>
       <div className={PS.screen} style={{ background: "white" }}>
         <ResponsiveAppBar
-          callBack={() => {}}
+          callBack={() => { }}
           color={"black"}
           colour={"white"}
         />
         <div className={PS.selctType} style={{ background: "rgb(20, 21, 21)" }}>
-        <Button
-        onClick={handleUploadFile}
-        variant="contained" sx={{mx:2}}>Contained</Button>
+          <Button
+            onClick={handleUploadFile}
+            variant="contained" sx={{ mx: 2 }}>Contained</Button>
           <div style={{ width: "20%" }}>
             <Tooltip
               title="Add TechStack"
@@ -156,31 +159,31 @@ const ProjectScreen = () => {
             >
               <PostAddIcon />
             </Tooltip>
-            
-              <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+
+            <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
               <Tooltip
-              title="Add Thumbnail Image"
-              sx={{ cursor: "pointer", color: "white" }}
-            >
+                title="Add Thumbnail Image"
+                sx={{ cursor: "pointer", color: "white" }}
+              >
                 <AddPhotoAlternateIcon
                   sx={{ color: "white" }}
                 />
-                </Tooltip>
-              </label>
-              <input type="file" id="imageUpload" hidden></input>
-            
+              </Tooltip>
+            </label>
+            <input type="file" id="imageUpload" hidden></input>
 
-              <label htmlFor="videoUpload" style={{ cursor: "pointer" }}>
+
+            <label htmlFor="videoUpload" style={{ cursor: "pointer" }}>
               <Tooltip
-              title="Add Video"
-              sx={{ cursor: "pointer", color: "white" }}
-            >
+                title="Add Video"
+                sx={{ cursor: "pointer", color: "white" }}
+              >
                 <VideoCallIcon
                   sx={{ color: "white" }}
                 />
-                </Tooltip>
-              </label>
-              <input type="file" id="videoUpload" onChange={handleSelectedFile} hidden></input>
+              </Tooltip>
+            </label>
+            <input type="file" id="videoUpload" onChange={handleSelectedFile} hidden></input>
 
           </div>
         </div>
@@ -192,6 +195,8 @@ const ProjectScreen = () => {
               poster="/images/banner.jpg"
               src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
             />
+           
+            
           </div>
           <div className={PS.bar}>
             {stackList.map(({ type, content }) => {
@@ -202,7 +207,7 @@ const ProjectScreen = () => {
 
         <div className={PS.content}>
           {contentList.map((object: any, index: number) => {
-            let renderContent = <div style={{}}></div>;
+            let renderContent = <div style={{ color: 'black' }}></div>;
             switch (object["type"]) {
               case "heading":
                 renderContent = (
@@ -211,6 +216,7 @@ const ProjectScreen = () => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      color: 'black',
                     }}
                   >
                     <h1>{object["content"]}</h1>{" "}
@@ -233,6 +239,7 @@ const ProjectScreen = () => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      color: 'black',
                     }}
                   >
                     <h3>{object["content"]}</h3>{" "}
@@ -255,6 +262,7 @@ const ProjectScreen = () => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      color: 'black',
                     }}
                   >
                     <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
@@ -273,13 +281,10 @@ const ProjectScreen = () => {
               case "snippet":
                 renderContent = (
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{ display: "flex", justifyContent: "space-between",color: "black" }}
                   >
                     <div style={{ width: "60%" }}>
-                      <MyCoolCodeBlock
-                        code={object["content"]}
-                        language={"jsx"}
-                      />{" "}
+                    <CodeBlockDefaultExample language = {object["language"]} text = {object["content"]}  theme='dark' />
                     </div>{" "}
                     <EditIcon
                       sx={{ cursor: "pointer" }}
@@ -312,7 +317,7 @@ const ProjectScreen = () => {
           name={""}
           id={1}
           save={handleStack}
-          saveMore={() => {}}
+          saveMore={() => { }}
           stackName={""}
         />
       )}
@@ -408,9 +413,14 @@ const ProjectScreen = () => {
                     width: "60%",
                     borderRadius: "3px",
                     border: "1px solid black",
+                  
                   }}
+                  onChange={(event) => {
+                    changeLanguage(event.target.value);
+                  }}
+                  value={contentLanguage}
                   type="name"
-                  name="TechStackName"
+                  name="Language"
                   placeholder="Enter Language name(eg python,jsx,java)"
                 ></input>
               </div>
@@ -420,8 +430,10 @@ const ProjectScreen = () => {
               style={{ width: "90%", marginTop: "30px" }}
             >
               <textarea
+                rows={10}
+                cols={10}
                 style={{
-                  marginLeft: "20px",
+                  marginLeft: "28px",
                   height: "30px",
                   width: "60%",
                   borderRadius: "3px",
@@ -431,10 +443,9 @@ const ProjectScreen = () => {
                   changeText(event.target.value);
                 }}
                 value={contentText}
-                rows={10}
-                cols={10}
-                name="TechStackName"
-                placeholder="Enter TechStack Name"
+
+                name="Content"
+                placeholder="Enter Text"
               ></textarea>
             </div>
             <div style={{ display: "flex", marginTop: "5%" }}>
@@ -451,7 +462,7 @@ const ProjectScreen = () => {
                   color: "white",
                 }}
                 onClick={() => {
-                  handleContent(contentType, contentText);
+                  handleContent(contentType, contentText,contentLanguage);
                 }}
               >
                 Save
@@ -535,7 +546,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
           </span>
         </div>
 
-        <div className={PS.details} style={{ width: "90%", marginLeft: "3%" }}>
+        <div className={PS.details} style={{ width: "90%", marginLeft: "3%", color: " black", }}>
           <span>TechStack</span>
           <input
             style={{
@@ -549,11 +560,11 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             name="TechStackName"
             placeholder="Enter TechStack Name"
             onChange={(event) => {
-              setTechStackName(event.target.name);
+              setTechStackName(event.target.value);
             }}
           ></input>
         </div>
-        <div className={PS.details} style={{ width: "90%", marginLeft: "3%" }}>
+        <div className={PS.details} style={{ width: "90%", marginLeft: "3%", color: " black" }}>
           <span>Name</span>
           <input
             style={{
@@ -566,7 +577,7 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             type="name"
             name="TechStackName"
             onChange={(event) => {
-              setName(event.target.name);
+              setName(event.target.value);
             }}
             placeholder="Enter TechStack Name"
           ></input>

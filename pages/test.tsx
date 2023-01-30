@@ -12,9 +12,9 @@ import ResponsiveAppBar from "../components/navbar";
 import SignIn from "../components/signin";
 import SignUp from "../components/signup";
 import MultiActionAreaCard from "../components/card";
-import MyCoolCodeBlock from "../components/codeBlock";
+import CodeBlockDefaultExample from "../components/codeBlock";
 import Footer from "../components/footer";
-import Bar from "../components/bar";
+import AlertDialog from "../components/alertBox";
 
 const exampleCodeBlock = `<div className={T.screen}>
 <Head>
@@ -32,13 +32,13 @@ const Test = () => {
       <Head>
         <title>Portfolio-ASH</title>
       </Head>
-      <MyCoolCodeBlock code = {exampleCodeBlock}
-      language = {"jsx"}
-      />
-    {/* <Footer/> */}
+      <CodeBlockDefaultExample language={"tsx"} text={exampleCodeBlock} theme='dark' />
+      {/* <Footer/> */}
       {/* <Bar /> */}
       {/* <SignIn /> */}
       {/* <SignUp /> */}
+
+
     </div>
   )
 }

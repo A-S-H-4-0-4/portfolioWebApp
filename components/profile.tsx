@@ -14,20 +14,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router'
 import { blue, pink } from '@mui/material/colors'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 
 interface ApiData {
@@ -51,12 +41,13 @@ const theme = createTheme({
   },
 });
 
-
+// images
+const banner = "/images/banner.jpg";
 
 import { callAPI } from "../api/api";
 
 
-export default function SignUp() {
+export default function Profile() {
   const router = useRouter()
 
   const [fields, setFields] = useState({
@@ -74,10 +65,10 @@ export default function SignUp() {
     setFields(newFields);
   };
 
-  
 
 
-  const handleSave = async () => {
+
+  const handleSaveParty = async () => {
     // setLoader(true);
 
     let {
@@ -154,76 +145,83 @@ export default function SignUp() {
           <Typography component="h1" variant="h5" style={{ color: 'black' }}>
             Sign up
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSave}  method = "POST"  >
+          <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSaveParty} >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  onChange={handlefields}
-                  value={fields.firstName}
-                />
+              <Grid item xs={12} style = {{display:"flex",alignItems: "center"}} >
+                <Typography  variant="h5" style={{ color: 'black' , marginRight:"10px"}} >
+                  Add Profile Image:
+                </Typography>
+                <label htmlFor="upload1" style={{cursor:"pointer"}}>
+                  <AccountCircleIcon sx={{color:"black",fontSize:"60px"}} />
+                </label>
+                <input
+                  type="file"
+                  id="upload1"
+                  hidden
+                ></input>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} style = {{display:"flex",alignItems: "center"}} >
+                <Typography  variant="h5" style={{ color: 'black' , marginRight:"10px"}} >
+                  Add Banner Image:
+                </Typography>
+                <label htmlFor="upload1" style={{cursor:"pointer"}}>
+                  <img src={banner} style={{height:"100px"}} />
+                </label>
+                <input
+                  type="file"
+                  id="upload1"
+                  hidden
+                ></input>
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  id="github"
+                  label="Git Hub userName"
+                  name="github"
                   onChange={handlefields}
-                  value={fields.lastName}
+                // value={fields.mobileNumber}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="mobileNumber"
-                  label="Phone No."
-                  name="mobileNumber"
-                  autoComplete="mobileNumber"
+                  id="linkedin"
+                  label="LinkedIn id"
+                  name="linkedin"
+
                   onChange={handlefields}
-                  value={fields.mobileNumber}
+                // value={fields.email}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  name="gitlab"
+                  label="Git Lab userName"
+                  type="gitlab"
+                  id="gitlab"
+
                   onChange={handlefields}
-                  value={fields.email}
+                // value={fields.password}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  name="instagram"
+                  label="Instagram UserName"
+                  type="instagram"
+                  id="instagram"
+
                   onChange={handlefields}
-                  value={fields.password}
+                // value={fields.password}
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -231,18 +229,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Save
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item  style={{ color: "black" }}>
 
-                Already have an account? Sign in
-
-              </Grid>
-            </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+
       </Container>
     </ThemeProvider>
   );
