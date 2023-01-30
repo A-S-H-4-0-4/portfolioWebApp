@@ -10,13 +10,13 @@
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .selctType div {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  margin-left: 75%;
 }
 
 .head {

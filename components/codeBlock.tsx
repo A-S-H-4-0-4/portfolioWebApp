@@ -1,14 +1,22 @@
-import React from 'react';
+import CopyToClipboard from "react-copy-to-clipboard";
+import SyntaxHighlighter from "react-syntax-highlighter";
+// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import swal from "sweetalert";
 
-import { CodeBlock } from '@atlaskit/code';
-import GlobalTheme from '@atlaskit/theme/components';
-
-const CodeBlockDefaultExample = ({ language, text , theme}) => {
-const mode = theme
+const CodeBlockDefaultExample = ({ language, text, theme }) => {
   return (
-    <GlobalTheme.Provider value={() => ({ mode })}>
-      <CodeBlock language={language} text={text} />
-    </GlobalTheme.Provider>
+    <div className="h-full w-1/2 flex flex-col justify-center items-center">
+      <CopyToClipboard text={text}>
+        <button
+          onClick={() => {
+            swal("code copied successfully");
+          }}
+        >
+          Copy Code
+        </button>
+      </CopyToClipboard>
+      <SyntaxHighlighter language={language}>{text}</SyntaxHighlighter>
+    </div>
   );
 };
 

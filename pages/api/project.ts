@@ -2,28 +2,26 @@ import HttpStatus from "http-status-codes";
 import prisma from "../../lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import getSession from "../../middleware/sessionTokenMiddleware";
-
+import { Console } from "console";
 interface ResponseType {
     message: string;
     data: {};
     errors: Array<{}>;
 }
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getSession(req);
-
     const { method, body } = req;
     const { userId } = body;
     if (userId !== null) {
         if (method === "GET") {
             let responseObject: ResponseType;
             try {
-
                 const result = await prisma.project.findMany(
                     {
                         select: {
+                            id:true,
                             title: true,
-                            discription: true,
+                            description: true,
                             videoUrl: true,
                         }
                     }
@@ -34,24 +32,45 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     errors: [],
                 };
                 console.log(result);
-
                 res.status(HttpStatus.OK).json(responseObject);
             } catch (error) { }
         } else if (method === "POST") {
             let responseObject: ResponseType
             try {
-                const { title,VideoUrl, thubnailurl, discription, techStak, projectcontent } = body
+                let { title, videoUrl, thumbnailurl, description, techStack, projectcontent } = body
+                 techStack = JSON.parse(techStack)
+                 console.log(projectcontent);
+                 console.log("i am wrong");
+                 
+                 projectcontent = JSON.parse(projectcontent)
+                //  console.log(projectcontent);
+               
+                techStack = techStack.map((obj: any, index: number) => {
+                    return {
+                        type: obj["type"],
+                        content: obj["content"],
+                    }
+                });
+                console.log(techStack);
+                projectcontent = projectcontent.map((obj: any, index: number) => {
+                    return {
+                        type: obj["type"],
+                        content: obj["content"],
+                        language: obj["language"],
+                    }
+                })
+                console.log(projectcontent);
                 const result = await prisma.project.create({
                     data: {
                         title: title,
-                        videoUrl: VideoUrl,
-                        thumbnailurl: thubnailurl,
-                        discription: discription,
-                        techStak: {
-                            createMany: techStak
+                        videoUrl: videoUrl,
+                        thumbnailurl: thumbnailurl,
+                        description: description,
+                        techStack: {
+                            create: techStack
                         },
                         projectContent: {
-                            createMany: projectcontent
+                            create: projectcontent
                         },
                         user: {
                             connect: {
@@ -68,9 +87,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(HttpStatus.OK).json(responseObject)
             } catch (error) {
                 console.log(error);
+                responseObject = {
+                    message: "failed",
+                    data: {},
+                    errors: [{ errorMessage: error }],
+                };
                 res.status(HttpStatus.BAD_REQUEST).json(responseObject)
             }
-
         }
     }
 };

@@ -2,25 +2,20 @@ import HttpStatus from "http-status-codes";
 import prisma from "../../../lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import getSession from "../../../middleware/sessionTokenMiddleware";
-
 interface ResponseType {
     message: string;
     data: {};
     errors: Array<{}>;
 }
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getSession(req);
-
     const { method, body } = req;
     const { userId } = body;
     console.log(userId)
-
     if (userId !== null) {
         const { id } = req.query
         const queryid: string = id.toString();
         console.log(queryid)
-
         if (method === "GET") {
             let responseObject: ResponseType;
             try {
@@ -34,8 +29,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             thumbnailurl: true,
                             videoUrl: true,
                             date: true,
-                            discription: true,
-                            techStak: {
+                            description: true,
+                            techStack: {
                                 select: {
                                     type: true,
                                     content: true,
@@ -50,7 +45,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                                     content: true,
                                  },
                                  orderBy: {
-                                    createdAt:"desc"                         
+                                    createdAt:"desc"
                                 }
                             }
                         }
@@ -74,35 +69,45 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             }
         } else if (method === "PUT") {
             let responseObject: ResponseType;
-
             try {
                 const body = req.body;
-
-                let { title, discription, videoUrl, thumbnailurl, techStak, projectContent } = body;
-                techStak = JSON.parse(techStak)
+                let { title, description, videoUrl, thumbnailurl, techStack, projectContent } = body;
+                techStack = JSON.parse(techStack)
                 projectContent = JSON.parse(projectContent);
-
+                techStack = techStack.map((obj: any, index: number) => {
+                    return {
+                        type: obj["type"],
+                        content: obj["content"],
+                    }
+                });
+                projectContent = projectContent.map((obj: any, index: number) => {
+                    return {
+                        type: obj["type"],
+                        content: obj["content"],
+                        language: obj["language"],
+                    }
+                })
                 try {
                     const result = await prisma.project.update({
                         where: {
                             id: queryid,
                         },
                         data: {
-                            discription,
+                            description,
                             title,
                             videoUrl,
                             thumbnailurl,
-                            techStak:{
+                            techStack:{
                                 deleteMany:{
                                     projectId:queryid
                                 },
-                                createMany:techStak
+                                create:techStack
                             },
                             projectContent:{
                                 deleteMany:{
                                     projectId:queryid
                                 },
-                                createMany:projectContent
+                                create:projectContent
                             }
                         }
                     });
@@ -116,7 +121,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 } catch (error) {
                     console.log(error);
                 }
-
             } catch (error) {
                 responseObject = {
                     message: "failed",
@@ -130,12 +134,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const result=await prisma.$transaction([
                     prisma.projectContent.deleteMany({ where: { projectId: queryid }}),
-                    
-                    prisma.techStak.deleteMany({ where: { projectId: queryid } }),
-                    
+                    prisma.techStack.deleteMany({ where: { projectId: queryid } }),
                     prisma.project.delete({ where: { id: queryid }})
                 ])
-
                 responseObject = {
                     message: "success",
                     data: {project:result},
@@ -152,7 +153,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 };
                 res.status(HttpStatus.CONFLICT).json(responseObject);
             }
-
         }
     }
 };

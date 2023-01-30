@@ -87,7 +87,7 @@ export default function SignUp() {
       email,
       password,
     } = fields;
-    const name = firstName + lastName
+    const name = firstName + ' ' + lastName
     if (name.trim() !== "") {
       if (mobileNumber.trim() !== "") {
         if (fields.mobileNumber.length == 10) {
