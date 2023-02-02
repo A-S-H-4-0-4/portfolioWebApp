@@ -9,11 +9,12 @@ import { useWrapper } from "../lib/contextApi";
 
 // router
 import { useRouter } from "next/router";
+// head
+import Head from 'next/head'
+
 
 // components
 import ResponsiveAppBar from "../components/navbar";
-import SignIn from "../components/signin";
-import SignUp from "../components/signup";
 import MultiActionAreaCard from "../components/card";
 import { homedir } from "os";
 import Footer from "../components/footer";
@@ -30,7 +31,7 @@ const Home = () => {
   const [textcolor, setTextColor] = React.useState('black')
   const [backgroundColor, setbackgroundColor] = React.useState('white')
   const [matches, setMatches] = useState(false);
-  const {session} = useWrapper()
+  const { session } = useWrapper()
 
 
   if (typeof window !== "undefined") {
@@ -41,15 +42,18 @@ const Home = () => {
     window
       .matchMedia("(max-width: 900px)")
       .addEventListener("change", (e) => setMatches(e.matches));
-    
-      if (!session) {
-        router.back()
-      }
+
+    if (!session) {
+      router.back()
+    }
 
   }, []);
   return (
     <React.Fragment>
-      {session===""?<div></div>:<div className={H.screen} style={{ backgroundColor: backgroundColor, height: "auto", width: "100%", display: "flex", flexDirection: "column" }}>
+      <Head>
+        <title>HOME</title>
+      </Head>
+      {session === "" ? <div></div> : <div className={H.screen} style={{ backgroundColor: backgroundColor, height: "auto", width: "100%", display: "flex", flexDirection: "column" }}>
         <ResponsiveAppBar callBack={() => {
           if (color == "white") {
             setColor("rgb(53, 53, 53)");

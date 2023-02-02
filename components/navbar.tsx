@@ -18,8 +18,7 @@ import { grey } from '@mui/material/colors';
 // router
 import { useRouter } from "next/router";
 
-const pages = ['Home', 'Resume', 'Contact'];
-const settings = ['SignUp', 'SignIn'];
+
 
 const ResponsiveAppBar = ({callBack,colour,color}) => {
 
@@ -236,11 +235,11 @@ const ResponsiveAppBar = ({callBack,colour,color}) => {
                 onClose={handleCloseUserMenu}
               >
 
-                <MenuItem onClick={() => { router.push("/signup") }}>
-                  <Typography textAlign="center">SignUp</Typography>
+                <MenuItem onClick={() => { router.push("/userProfile") }}>
+                  <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => { router.push("/signin") }}>
-                  <Typography textAlign="center">SignIn</Typography>
+                <MenuItem onClick={() => { router.push("") }}>
+                  <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               </Menu>
             </Box>

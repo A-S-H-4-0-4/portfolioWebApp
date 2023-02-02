@@ -9,12 +9,11 @@ import Head from 'next/head'
 
 // components
 import ResponsiveAppBar from "../components/navbar";
-import SignIn from "../components/signin";
-import SignUp from "../components/signup";
 import MultiActionAreaCard from "../components/card";
 import CodeBlockDefaultExample from "../components/codeBlock";
 import Footer from "../components/footer";
 import AlertDialog from "../components/alertBox";
+import Loader from "../components/loader";
 
 const exampleCodeBlock = `<div className={T.screen}>
 <Head>
@@ -37,7 +36,7 @@ const Test = () => {
       {/* <Bar /> */}
       {/* <SignIn /> */}
       {/* <SignUp /> */}
-
+<AlertDialog heading = "Alert!!" text= "You Have Successfully LogedIn" />
 
     </div>
   )

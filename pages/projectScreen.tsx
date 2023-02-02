@@ -79,11 +79,12 @@ const ProjectScreen = () => {
     const files = event.target.files;
     console.log(files);
 
-    if (files && files[0].size < 20000000) {
+    if (files && files[0].size < 50000000) {
       setImageFile(files[0]);
 
       console.log(files[0]);
     } else {
+    alert("File size should be greater 50mb")
     }
   };
 

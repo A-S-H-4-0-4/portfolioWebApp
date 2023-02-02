@@ -12,17 +12,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getSession(req);
     const { method, body } = req;
     const { userId } = body;
+    console.log(body);
+
     if (userId !== null) {
         if (method === "GET") {
             let responseObject: ResponseType;
             try {
                 const result = await prisma.project.findMany(
                     {
+                        where: { user: { id: userId } },
                         select: {
-                            id:true,
+                            id: true,
                             title: true,
                             description: true,
-                            videoUrl: true,
+                            thumbnailurl: true,
                         }
                     }
                 );
@@ -38,13 +41,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             let responseObject: ResponseType
             try {
                 let { title, videoUrl, thumbnailurl, description, techStack, projectcontent } = body
-                 techStack = JSON.parse(techStack)
-                 console.log(projectcontent);
-                 console.log("i am wrong");
-                 
-                 projectcontent = JSON.parse(projectcontent)
+                techStack = JSON.parse(techStack)
+                console.log(projectcontent);
+                console.log("i am wrong");
+
+                projectcontent = JSON.parse(projectcontent)
                 //  console.log(projectcontent);
-               
+
                 techStack = techStack.map((obj: any, index: number) => {
                     return {
                         type: obj["type"],
