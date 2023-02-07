@@ -46,12 +46,14 @@ model Project {
   videoUrl       String
   thumbnailurl   String
   description    String
+  projectLink    String?
   date           DateTime         @default(now())
   userId         String           @db.ObjectId
   user           User             @relation(fields: [userId], references: [id])
   techStack      TechStack[]
   projectContent ProjectContent[]
 }
+
 model TechStack {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   type      String

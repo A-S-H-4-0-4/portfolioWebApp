@@ -4,15 +4,15 @@ import prisma from "../lib/prisma";
 
 export default async (req:NextApiRequest)=>{
 
-    let keyObject = req.body;
+    let keyObject = {...req.headers};
 
-    if (req.method === "GET" || req.method==="DELETE") {
-      keyObject = { ...req.headers};
-    }
+    // if (req.method === "GET" || req.method==="DELETE") {
+    //   keyObject = { ...req.headers};
+    // }
     let userId = null; // sets the files field in the request object
 
-    const { session } = keyObject;
-
+    let { session } = keyObject;
+    session = session as string; 
     console.log(session);
     if (session && session.trim() !== "") {
       const response = await prisma.session.findUnique({

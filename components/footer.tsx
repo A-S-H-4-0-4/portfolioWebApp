@@ -49,7 +49,7 @@ const Footer = () => {
 
   return (
     <React.Fragment>
-      {matches == false && <div className={fotr.box} style={{ backgroundColor: "white", height: "80px", width: "100%", display: "flex", alignItems: "center", marginTop:"200px"}}>
+      {matches == false && <div className={fotr.box} style={{ backgroundColor: "white", height: "80px", width: "100%", display: "flex", alignItems: "center", marginTop:"100px"}}>
 
         <div className={fotr.profileImg}>
           <img src={profileImage} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover" }} />

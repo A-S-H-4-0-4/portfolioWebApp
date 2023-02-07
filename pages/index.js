@@ -1,17 +1,30 @@
 // react
 import { useEffect } from "react";
 
+
 // next
 import { useRouter } from 'next/router'
 
-// next head
-import Head from 'next/head';
+// local
+import { getData } from "../local/storage";
+
+
+
 
 
 export default function Home() {
   const router = useRouter()
   useEffect(() => {
-    router.push("/signin")
+    if (window.Object !== undefined) {
+      const session = getData("session")
+      if (session) {
+        router.push("/home")
+      } else{
+        router.push("/signin")
+      }
+    }
+
+    
     return () => { }
   }, [])
   return (

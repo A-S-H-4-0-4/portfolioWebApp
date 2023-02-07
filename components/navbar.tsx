@@ -20,17 +20,17 @@ import { useRouter } from "next/router";
 
 
 
-const ResponsiveAppBar = ({callBack,colour,color}) => {
+const ResponsiveAppBar = ({color,colour,callBack}) => {
 
   const router = useRouter();
-  // const [color, setColor] = React.useState('white')
-  // const [colour, setColour] = React.useState('black')
+ 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -108,6 +108,9 @@ const ResponsiveAppBar = ({callBack,colour,color}) => {
                 <MenuItem onClick={() => { router.push("/home") }}>
                   <Typography textAlign="center" >Home</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => { router.push("/projectScreen") }}>
+                  <Typography textAlign="center" >Create Project</Typography>
+                </MenuItem>
                 <MenuItem  >
                   <Typography textAlign="center" >Resume</Typography>
                 </MenuItem>
@@ -161,6 +164,13 @@ const ResponsiveAppBar = ({callBack,colour,color}) => {
                 sx={{ my: 2, color: colour, display: 'block' }}
               >
                 Contact
+
+              </Button>
+              <Button
+                onClick={() => { router.push("/projectScreen") }}
+                sx={{ my: 2, color: colour, display: 'block' }}
+              >
+                Create Project
 
               </Button>
               <Button

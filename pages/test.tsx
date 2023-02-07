@@ -9,9 +9,9 @@ import Head from 'next/head'
 
 // components
 import ResponsiveAppBar from "../components/navbar";
+import Footer from "../components/footer";
 import MultiActionAreaCard from "../components/card";
 import CodeBlockDefaultExample from "../components/codeBlock";
-import Footer from "../components/footer";
 import AlertDialog from "../components/alertBox";
 import Loader from "../components/loader";
 

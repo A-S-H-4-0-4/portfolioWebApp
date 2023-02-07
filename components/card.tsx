@@ -1,9 +1,5 @@
 // card component
 
-// styles
-import cardStyles from "../styles/components/card.module.css";
-
-
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,7 +7,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 
-export default function MultiActionAreaCard() {
+
+interface CardData{
+  id:string,
+  title:string,
+  description:string,
+  thumbanailUrl:string
+
+}
+
+export default function MultiActionAreaCard(cardData:CardData) {
   return (
     <Card sx={{ maxWidth: 400, minHeight: 350,marginLeft:"30px",marginTop:"30px",  }}>
       <CardActionArea>
@@ -24,10 +29,10 @@ export default function MultiActionAreaCard() {
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            BillBook
+            {cardData.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-           Billbook is an inventory management web-app. By using billbook you can manage your sales-purchase transactions and keep record of your stock.
+            {cardData.description}
           </Typography>
         </CardContent>
       </CardActionArea>

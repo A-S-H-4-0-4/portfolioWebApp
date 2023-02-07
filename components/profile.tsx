@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useRouter } from 'next/router'
-import { blue, pink } from '@mui/material/colors'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
-
-
-
+import React, { useState, useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { blue, pink } from "@mui/material/colors";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CreateNewFolderSharpIcon from "@mui/icons-material/CreateNewFolderSharp";
 
 interface ApiData {
   name: string;
@@ -35,20 +32,25 @@ interface ResponseType {
 const theme = createTheme({
   palette: {
     primary: {
-      main: 'rgb(0, 0, 0)',
-    }
-
+      main: "rgb(0, 0, 0)",
+    },
   },
 });
 
+// components
+import ResponsiveAppBar from "../components/navbar";
+import Footer from "../components/footer";
+
 // images
 const banner = "/images/banner.jpg";
+// icons
+const logo = "/icons/logo.png";
 
 import { callAPI } from "../api/api";
-
+import { TextareaAutosize } from "@mui/material";
 
 export default function Profile() {
-  const router = useRouter()
+  const router = useRouter();
 
   const [fields, setFields] = useState({
     firstName: "",
@@ -65,177 +67,162 @@ export default function Profile() {
     setFields(newFields);
   };
 
-
-
-
-  const handleSaveParty = async () => {
-    // setLoader(true);
-
-    let {
-      firstName,
-      lastName,
-      mobileNumber,
-      email,
-      password,
-    } = fields;
-    const name = firstName + lastName
-    if (name.trim() !== "") {
-      if (mobileNumber.trim() !== "") {
-        if (fields.mobileNumber.length == 10) {
-          if (email.trim() !== "") {
-            const params: ApiData = {
-              name,
-              phoneNumber: mobileNumber,
-              email,
-              password
-            };
-
-            const response: ResponseType = await callAPI("signin", params);
-
-            const { message, errors } = response;
-            if (message === "success") {
-              alert(
-                "Details saved successfully"
-              );
-            } else if (message === "failure") {
-              errors.map((errorObject) => {
-                const { errorMessage } = errorObject;
-                alert(errorMessage);
-              });
-            } else {
-              alert("Some Server error");
-            }
-
-          }
-          else {
-            alert("Please enter a valid email");
-          }
-        }
-        else {
-          alert("Please enter a valid mobile number");
-        }
-
-
-
-      }
-      else {
-        alert("Please enter a valid mobile number");
-      }
-    } else {
-      alert("Please enter a valid Name");
-    }
-  };
-
-
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5" style={{ color: 'black' }}>
-            Sign up
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSaveParty} >
-            <Grid container spacing={2}>
-              <Grid item xs={12} style = {{display:"flex",alignItems: "center"}} >
-                <Typography  variant="h5" style={{ color: 'black' , marginRight:"10px"}} >
-                  Add Profile Image:
-                </Typography>
-                <label htmlFor="upload1" style={{cursor:"pointer"}}>
-                  <AccountCircleIcon sx={{color:"black",fontSize:"60px"}} />
-                </label>
-                <input
-                  type="file"
-                  id="upload1"
-                  hidden
-                ></input>
-              </Grid>
-              <Grid item xs={12} style = {{display:"flex",alignItems: "center"}} >
-                <Typography  variant="h5" style={{ color: 'black' , marginRight:"10px"}} >
-                  Add Banner Image:
-                </Typography>
-                <label htmlFor="upload1" style={{cursor:"pointer"}}>
-                  <img src={banner} style={{height:"100px"}} />
-                </label>
-                <input
-                  type="file"
-                  id="upload1"
-                  hidden
-                ></input>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="github"
-                  label="Git Hub userName"
-                  name="github"
-                  onChange={handlefields}
-                // value={fields.mobileNumber}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="linkedin"
-                  label="LinkedIn id"
-                  name="linkedin"
+    <div style={{ backgroundColor: "white", height: "auto", width: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}>
+      <ResponsiveAppBar
+            callBack={() => {
+            }}
+            colour={"black"}
+            color={"white"}
+          />
+      <img src={logo} style={{height: "150px", width: "350px", marginTop: "50px"}} />
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Box component="form" noValidate sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Typography
+                    variant="h5"
+                    style={{ color: "black", marginRight: "10px" }}
+                  >
+                    Add Profile Image:
+                  </Typography>
+                  <label htmlFor="upload1" style={{ cursor: "pointer" }}>
+                    <AccountCircleIcon
+                      sx={{ color: "black", fontSize: "60px" }}
+                    />
+                  </label>
+                  <input type="file" id="upload1" hidden></input>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Typography
+                    variant="h5"
+                    style={{ color: "black", marginRight: "10px" }}
+                  >
+                    Add Banner Image:
+                  </Typography>
+                  <label htmlFor="upload1" style={{ cursor: "pointer" }}>
+                    <img src={banner} style={{ height: "100px" }} />
+                  </label>
+                  <input type="file" id="upload1" hidden></input>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Typography
+                    variant="h5"
+                    style={{ color: "black", marginRight: "10px" }}
+                  >
+                    Add Resume file:
+                  </Typography>
+                  <label htmlFor="upload2" style={{ cursor: "pointer" }}>
+                    <CreateNewFolderSharpIcon
+                      sx={{ color: "black", fontSize: "60px" }}
+                    />
+                  </label>
+                  <input type="file" id="upload2" hidden></input>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="github"
+                    label="Git Hub userName"
+                    name="github"
+                    onChange={handlefields}
+                    // value={fields.mobileNumber}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="linkedin"
+                    label="LinkedIn id"
+                    name="linkedin"
+                    onChange={handlefields}
+                    // value={fields.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="gitlab"
+                    label="Git Lab userName"
+                    type="gitlab"
+                    id="gitlab"
+                    onChange={handlefields}
+                    // value={fields.password}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="instagram"
+                    label="Instagram UserName"
+                    type="instagram"
+                    id="instagram"
+                    onChange={handlefields}
+                    // value={fields.password}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="title"
+                    label="Home Page Title"
+                    type="title"
+                    id="title"
+                    onChange={handlefields}
+                  />
+                </Grid>
 
-                  onChange={handlefields}
-                // value={fields.email}
-                />
+                <Grid item xs={12}>
+                  <textarea
+                    name=""
+                    id=""
+                    cols={70}
+                    rows={10}
+                    placeholder="Home Page Description"
+                  ></textarea>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="gitlab"
-                  label="Git Lab userName"
-                  type="gitlab"
-                  id="gitlab"
 
-                  onChange={handlefields}
-                // value={fields.password}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="instagram"
-                  label="Instagram UserName"
-                  type="instagram"
-                  id="instagram"
-
-                  onChange={handlefields}
-                // value={fields.password}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Save
-            </Button>
-
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Save
+              </Button>
+            </Box>
           </Box>
-        </Box>
-
-      </Container>
-    </ThemeProvider>
+        </Container>
+      </ThemeProvider>
+      <Footer/>
+    </div>
   );
 }

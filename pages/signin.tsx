@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+
+
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green, purple } from '@mui/material/colors';
+import { green } from '@mui/material/colors';
 import Router, { useRouter } from 'next/router'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
@@ -26,8 +26,10 @@ const logo = "icons/logo.png";
 // next head
 import Head from 'next/head';
 
-// enum methods
-import { methods } from "../api/api";
+
+// context api
+import { useWrapper } from "../lib/contextApi";
+
 
 import { callAPI } from "../api/api";
 import { saveData } from '../local/storage';
@@ -85,16 +87,19 @@ interface ResponseType {
 
 
 export default function SignIn() {
-
+  
 
   const [loader, setLoader] = useState(false)
+  const [fields, setfields] = useState({head:"",text:""})
   const router = useRouter()
-
+  const {alert,alertCallback} = useWrapper()  
   const styles = {
     marginTop: "50px",
     borderRadius: "10px",
     boxShadow: "1px 1px 1px 1px grey"
   }
+
+  
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -106,15 +111,21 @@ export default function SignIn() {
     };
     setLoader(true);
     const response: ResponseType = await callAPI("login", params);
+    console.log(response);
+    
     setLoader(false);
     const { message, data, errors } = response;
     if (message === "success") {
       if (typeof data === "object") {
         if (saveData("session", data['sessionKey'])) {
-          Router.push("/home")
+          console.log("homeing");
+          
+          router.push("/home")
           return
         }
-        return(<AlertDialog heading="Error!!" text="Error in login please try again ):" />)
+        
+       
+        // "Error!!","Error in login please try again ):")
       }
     } else if (message === "failed") {
       errors.map((errorObject) => {
@@ -202,6 +213,7 @@ export default function SignIn() {
         </ThemeProvider>
       </div>
       {loader && <Loader />}
+      {alert && <AlertDialog heading={fields.head} text = {fields.text} />}
     </React.Fragment>
   );
 }

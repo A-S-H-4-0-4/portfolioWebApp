@@ -2,12 +2,13 @@ import HttpStatus from "http-status-codes";
 import prisma from "../../lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import getSession from "../../middleware/sessionTokenMiddleware";
-import { Console } from "console";
+
 interface ResponseType {
     message: string;
     data: {};
     errors: Array<{}>;
 }
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getSession(req);
     const { method, body } = req;
@@ -26,6 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             title: true,
                             description: true,
                             thumbnailurl: true,
+                            projectLink:true,
                         }
                     }
                 );
@@ -40,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         } else if (method === "POST") {
             let responseObject: ResponseType
             try {
-                let { title, videoUrl, thumbnailurl, description, techStack, projectcontent } = body
+                let { title, videoUrl, thumbnailurl, description, techStack, projectcontent,projectLink } = body
                 techStack = JSON.parse(techStack)
                 console.log(projectcontent);
                 console.log("i am wrong");
@@ -69,6 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         videoUrl: videoUrl,
                         thumbnailurl: thumbnailurl,
                         description: description,
+                        projectLink:projectLink!==null?projectLink:undefined,
                         techStack: {
                             create: techStack
                         },

@@ -3,10 +3,12 @@ import PS from "../styles/projectScreen.module.css";
 
 // react
 import React, { useEffect, useState } from "react";
-import Highlight from "react-highlight";
 
-//  firebase
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+
+
+// image upload
+import { ImageUpload } from "../lib/fileUpload";
 
 // components
 import ResponsiveAppBar from "../components/navbar";
@@ -36,7 +38,7 @@ import { useWrapper } from "../lib/contextApi";
 
 // Video player
 import "node_modules/video-react/dist/video-react.css";
-import { Player } from "video-react";
+import { BigPlayButton, Player } from "video-react";
 
 // muit tooltip
 import Tooltip from "@mui/material/Tooltip";
@@ -44,8 +46,8 @@ import Button from "@mui/material/Button";
 
 // Importing callApi
 import { callAPI } from "../api/api";
-import { json } from "stream/consumers";
-import { parse } from "path";
+import { getData } from "../local/storage";
+
 
 interface ResponseType {
   message: string;
@@ -54,6 +56,7 @@ interface ResponseType {
 }
 
 const ProjectScreen = () => {
+
   // State Management
   const [showAddTech, setShowAddTech] = useState(false);
   const [showNameBox, setShowNameBox] = useState(false);
@@ -67,12 +70,13 @@ const ProjectScreen = () => {
   const [cIndex, changeCindex] = useState(-1);
   const [sIndex, changeSindex] = useState(-1);
   const [imageFile, setImageFile] = useState<File>();
-  const [downloadURL, setDownloadURL] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [progressUpload, setProgressUpload] = useState(0);
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-
+  const [progress,setProgress] = useState(0)
   const { session } = useWrapper();
 
   const handleSelectedFile = (event: any) => {
@@ -84,44 +88,37 @@ const ProjectScreen = () => {
 
       console.log(files[0]);
     } else {
-    alert("File size should be greater 50mb")
+    alert("File size should be smaller than 50mb")
     }
   };
 
-  const handleUploadFile = () => {
+  const handleUploadFile = (path:string) => {
+   return ()=>{
+        
     if (imageFile) {
-      const name = imageFile.name;
-      const storageRef = ref(storage, `image/${name}`);
-      const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
-
-          setProgressUpload(progress); // to show progress upload
-
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {},
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            //url is download url of file
-            setDownloadURL(url);
-          });
+      // image upload functionality
+      const session = getData("session")
+      const progressCallback = (progress:number)=>{
+        setProgress(progress)
+      } 
+      const downloadCallback = (url:string)=>{
+        switch (path) {
+          case "videoUrl":
+            setVideoUrl(url)
+            break;
+          case 'thumbnailUrl':
+            setThumbnailUrl(url)
+            break;
+          default:
+            break;
         }
-      );
+      }
+    const imageUpload = new ImageUpload(imageFile,path,progressCallback,downloadCallback)
+    imageUpload.upload(session)        
     } else {
     }
+   }
   };
 
   const handleContent = (type: string, content: string, language: string) => {
@@ -148,14 +145,12 @@ const ProjectScreen = () => {
     setShowAddTech(false);
   };
 
-  //   const AddContent = () => {
 
-  //     return
-  //   };
 
-  // handleSave
+  // save function
 
   const handleSave = async () => {
+    
     const params = {
       techStack: JSON.stringify(stackList),
       projectcontent: JSON.stringify(contentList),
@@ -167,7 +162,7 @@ const ProjectScreen = () => {
     };
 
     const response: ResponseType = await callAPI(
-      `http://localhost:3000/api/project`,
+      'project',
       params
     );
 
@@ -264,7 +259,7 @@ const ProjectScreen = () => {
             </div>
             <div style={{ width: "20%" }}>
               <Button
-                onClick={handleUploadFile}
+                onClick={handleUploadFile('projectVideo')}
                 variant="contained"
                 sx={{ mx: 2 }}
               >
@@ -276,14 +271,18 @@ const ProjectScreen = () => {
               </Button>
             </div>
           </div>
-
+          <LinearProgress variant="determinate" value={progress} />
           <div className={PS.head}>
             <div className={PS.video}>
               <Player
+              
                 playsInline
                 poster="/images/banner.jpg"
                 src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
-              />
+                
+              >
+                <BigPlayButton position="center" />
+              </Player>
             </div>
             <div className={PS.bar}>
               {stackList.map(({ type, content }) => {
@@ -291,7 +290,7 @@ const ProjectScreen = () => {
               })}
             </div>
           </div>
-
+         
           <div className={PS.content}>
             {contentList.map((object: any, index: number) => {
               let renderContent = <div style={{ color: "black" }}></div>;
