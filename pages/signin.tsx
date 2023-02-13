@@ -87,19 +87,19 @@ interface ResponseType {
 
 
 export default function SignIn() {
-  
+
+  const { session } = useWrapper()
 
   const [loader, setLoader] = useState(false)
-  const [fields, setfields] = useState({head:"",text:""})
+  const [fields, setfields] = useState({ head: "", text: "" })
   const router = useRouter()
-  const {alert,alertCallback} = useWrapper()  
   const styles = {
     marginTop: "50px",
     borderRadius: "10px",
     boxShadow: "1px 1px 1px 1px grey"
   }
 
-  
+
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -112,108 +112,115 @@ export default function SignIn() {
     setLoader(true);
     const response: ResponseType = await callAPI("login", params);
     console.log(response);
-    
+
     setLoader(false);
     const { message, data, errors } = response;
     if (message === "success") {
       if (typeof data === "object") {
         if (saveData("session", data['sessionKey'])) {
-          console.log("homeing");
-          
           router.push("/home")
           return
         }
-        
-       
+
+
         // "Error!!","Error in login please try again ):")
       }
     } else if (message === "failed") {
       errors.map((errorObject) => {
-       return( <AlertDialog heading="Error!!" text={errorObject["error"]} />)
+        return (<AlertDialog heading="Error!!" text={errorObject["error"]} />)
       });
     } else {
-      return(<AlertDialog heading="Error!!" text="There in error in server please try again later ):" />)
+      return (<AlertDialog heading="Error!!" text="There in error in server please try again later ):" />)
     }
   };
 
-  return (
-    <React.Fragment>
-      <Head>
-        <title>User | Signin</title>
-      </Head>
-      <div style={{ backgroundColor: "white", height: "100vh", width: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}>
-        <img src={logo} style={{ height: "150px", width: "350px", marginTop: "50px" }} />
-        <ThemeProvider theme={theme} >
-          <Container component="main" maxWidth="xs" style={styles}>
-            <CssBaseline />
-            <Box
-              sx={{
-                marginTop: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
-                <AccountBoxIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5" style={{ color: 'black' }}>
-                Sign in
-              </Typography>
-              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                <TextField
-                  required
-                  fullWidth
-                  id="mobileNumber"
-                  label="Phone No."
-                  name="mobileNumber"
-                  autoComplete="mobileNumber"
+  if (!session) {
+    return (
+      <React.Fragment>
+        <Head>
+          <title>User | Signin</title>
+        </Head>
+        <div style={{ backgroundColor: "white", height: "100vh", width: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}>
+          <img src={logo} style={{ height: "150px", width: "350px", marginTop: "50px" }} />
+          <ThemeProvider theme={theme} >
+            <Container component="main" maxWidth="xs" style={styles}>
+              <CssBaseline />
+              <Box
+                sx={{
+                  marginTop: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
+                  <AccountBoxIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5" style={{ color: 'black' }}>
+                  Sign in
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="mobileNumber"
+                    label="Phone No."
+                    name="mobileNumber"
+                    autoComplete="mobileNumber"
 
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
 
-                // color="primary"
-                />
-                {/* <FormControlLabel
+                  // color="primary"
+                  />
+                  {/* <FormControlLabel
       control={<Checkbox value="remember" color="primary" />}
       label="Remember me"
     /> */}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </Button>
-                <Grid container>
-                  {/* <Grid item xs>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    {/* <Grid item xs>
         <Link href="#" variant="body2">
           Forgot password?
         </Link>
       </Grid> */}
-                  <Grid item >
-                    <Link href="signup" variant="body2">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
+                    <Grid item >
+                      <Link href="signup" variant="body2">
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
                   </Grid>
-                </Grid>
+                </Box>
               </Box>
-            </Box>
-            <Copyright sx={{ mt: 5 }} />
-          </Container>
-        </ThemeProvider>
+              <Copyright sx={{ mt: 5 }} />
+            </Container>
+          </ThemeProvider>
+        </div>
+        {loader && <Loader />}
+        {/* {alert && <AlertDialog heading={fields.head} text = {fields.text} />} */}
+      </React.Fragment>
+    );
+  }
+  else {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <h2>You are logged in <a style={{ color: "blue", textDecoration: "underline",cursor:"pointer" }} onClick={() => { router.push("/home") }} > Go to Home</a> </h2>
       </div>
-      {loader && <Loader />}
-      {alert && <AlertDialog heading={fields.head} text = {fields.text} />}
-    </React.Fragment>
-  );
+    )
+  }
 }

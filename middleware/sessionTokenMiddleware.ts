@@ -13,7 +13,6 @@ export default async (req:NextApiRequest)=>{
 
     let { session } = keyObject;
     session = session as string; 
-    console.log(session);
     if (session && session.trim() !== "") {
       const response = await prisma.session.findUnique({
         where: {

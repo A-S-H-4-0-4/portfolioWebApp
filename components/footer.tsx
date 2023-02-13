@@ -6,9 +6,11 @@ import React, { useEffect, useState } from "react";
 // router
 import { useRouter } from "next/router";
 
+// nextLink
+import Link from 'next/link'
 
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+
 // icons
 import InstagramIcon from '@mui/icons-material/Instagram';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
@@ -18,26 +20,26 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 // images
 const profileImage = "/images/banner.jpg"
 
-const Footer = () => {
+const Footer = ({textColor,iconColor,borderColor,backgroundColor}) => {
 
   const [matches, setMatches] = useState(false);
 
   if (typeof window !== "undefined") {
-    window.matchMedia("(min-width: 900px)").matches;
+    window.matchMedia("(min-width: 1100px)").matches;
   }
 
   useEffect(() => {
     window
-      .matchMedia("(max-width: 900px)")
+      .matchMedia("(max-width: 1100px)")
       .addEventListener("change", (e) => setMatches(e.matches));
   }, []);
 
   function Copyright(props: any) {
     return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      <Typography variant="body2"  align="center" {...props} style = {{color: textColor}} >
         {'Copyright © '}
-        <Link color="inherit" href="" style={{ textDecoration: "none" }}>
-          Ash.com
+        <Link  href="" style={{ textDecoration: "none" , color: textColor }}>
+          Portfolio
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
@@ -49,43 +51,43 @@ const Footer = () => {
 
   return (
     <React.Fragment>
-      {matches == false && <div className={fotr.box} style={{ backgroundColor: "white", height: "80px", width: "100%", display: "flex", alignItems: "center", marginTop:"100px"}}>
+      {matches == false && <div className={fotr.box} style={{ backgroundColor : backgroundColor , height: "80px", width: "100%", display: "flex", alignItems: "center", marginTop:"100px"}}>
 
-        <div className={fotr.profileImg}>
+        <div className={fotr.profileImg} style={{width: "15%"}} >
           <img src={profileImage} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover" }} />
-          <h3 style={{ marginLeft: "10px", alignItems: "center", color: "black" }}>Asyush Bhardwaj</h3>
+          <h3 style={{ marginLeft: "10px", alignItems: "center", color: textColor}}>Asyush Bhardwaj</h3>
         </div>
         <div className={fotr.bordr} style={{
-          background: "black",
+          background: borderColor,
           width: "2px",
           height: "70%"
         }}></div>
-        <Copyright sx={{ mt: 4, mb: 4, marginLeft: "20px", color: "black" }} />
+        <Copyright sx={{ mt: 4, mb: 4, marginLeft: "20px" }} />
 
 
-        <div style={{ marginLeft: "45%", width: "8%", display: "flex", alignItems: "center", justifyContent: "space-around" }}>
-          <InstagramIcon sx={{ color: "black" }} />
-          <MailOutlineOutlinedIcon sx={{ color: "black" }} />
-          <GitHubIcon sx={{ color: "black" }} />
-          <LinkedInIcon sx={{ color: "black" }} />
+        <div style={{ marginLeft: "55%", width: "8%", display: "flex", alignItems: "center", justifyContent: "space-around" }}>
+          <InstagramIcon sx={{ color: iconColor }} />
+          <MailOutlineOutlinedIcon sx={{ color: iconColor}} />
+          <GitHubIcon sx={{ color: iconColor }} />
+          <LinkedInIcon sx={{ color: iconColor }} />
         </div>
       </div>}
 
-      {matches == true && <div className={fotr.box} style={{ backgroundColor: "red", height: "200px", width: "100%", display: "flex",  flexDirection: "column", alignItems: "center",justifyContent: "center",marginTop:"20px"}}>
+      {matches == true && <div className={fotr.box} style={{ backgroundColor: backgroundColor, height: "200px", width: "100%", display: "flex",  flexDirection: "column", alignItems: "center",justifyContent: "center",marginTop:"20px"}}>
 
         <div className={fotr.profileImg}>
           <img src={profileImage} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover",border: "1px solid black" }} />
-          <h3 style={{ marginLeft: "10px", alignItems: "center", color: "black" }}>Asyush Bhardwaj</h3>
+          <h3 style={{ marginLeft: "10px", alignItems: "center", color: textColor }}>Aayush Bhardwaj</h3>
         </div>
 
-        <Copyright sx={{ mt: 2, mb: 3, marginLeft: "20px", color: "black", fontWeight: "bold"}} />
+        <Copyright sx={{ mt: 2, mb: 3, marginLeft: "30px", fontWeight: "bold"}} />
 
 
-        <div style={{  width: "13%", display: "flex", alignItems: "center", justifyContent: "space-around", }}>
-          <InstagramIcon sx={{ color: "black" }} />
-          <MailOutlineOutlinedIcon sx={{ color: "black" }} />
-          <GitHubIcon sx={{ color: "black" }} />
-          <LinkedInIcon sx={{ color: "black" }} />
+        <div style={{  width: "50%", display: "flex", alignItems: "center",  marginLeft: "30px", justifyContent: "space-around", }}>
+          <InstagramIcon sx={{ color: iconColor }} />
+          <MailOutlineOutlinedIcon sx={{ color:iconColor }} />
+          <GitHubIcon sx={{ color: iconColor }} />
+          <LinkedInIcon sx={{ color: iconColor }} />
         </div>
       </div>}
 

@@ -30,7 +30,6 @@ export const callAPI = async (
 ) => {
   let body: {} = {};
   const session: string = getData("session");
-  console.log(session);
   try {
     // let informationObject = {method:'GET'}
     let apiMethod: methods = methods.GET;
@@ -109,7 +108,11 @@ export const callAPI = async (
         console.log(data);
         return data;
       case methods.DELETE:
-        response = await instance.delete(API);
+        response = await instance.delete(API,{
+          headers: {
+            session: session,
+          },
+        });
         data = responseBody(response);
         console.log(data);
         return data;

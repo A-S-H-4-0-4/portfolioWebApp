@@ -25,7 +25,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     id:true,
                     title: true,
                     thumbnailurl: true,
-                    videoUrl: true,
                     date: true,
                     description:true,
                     projectLink:true,

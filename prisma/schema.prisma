@@ -25,27 +25,29 @@ model User {
   project     Project[]
   session     Session[]
   userProfile UserProfile[]
+  visitors    Visitors[]
 }
 model UserProfile {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  emailAddress String
-  userImage    String?
-  bannerImage  String?
-  gitHub       String?
-  linkedIn     String?
-  instaGram    String?
-  gitLab       String?
-  twitter      String?
-  resume       String?
-  userid       String  @unique @db.ObjectId
-  user         User    @relation(fields: [userid], references: [id])
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  userImage     String?
+  bannerImage   String?
+  gitHub        String?
+  linkedIn      String?
+  instaGram     String?
+  gitLab        String?
+  twitter       String?
+  resume        String?
+  description   String?
+  homePageTitle String?
+  userid        String  @unique @db.ObjectId
+  user          User    @relation(fields: [userid], references: [id])
 }
 model Project {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   title          String
-  videoUrl       String
-  thumbnailurl   String
-  description    String
+  videoUrl       String?
+  thumbnailurl   String?
+  description    String?
   projectLink    String?
   date           DateTime         @default(now())
   userId         String           @db.ObjectId
@@ -53,7 +55,6 @@ model Project {
   techStack      TechStack[]
   projectContent ProjectContent[]
 }
-
 model TechStack {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   type      String
@@ -64,7 +65,7 @@ model TechStack {
 }
 model ProjectContent {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  type      type     @default(snippet)
+  type      type     @default(code)
   content   String
   createdAt DateTime @default(now())
   language  String   @default("text")
@@ -74,6 +75,13 @@ model ProjectContent {
 enum type {
   heading
   subHeading
-  snippet
+  code
   text
+}
+model Visitors {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  iP      String
+  phoneNo String
+  userId  String @db.ObjectId
+  user    User   @relation(fields: [userId], references: [id])
 }

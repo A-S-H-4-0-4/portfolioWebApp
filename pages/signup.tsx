@@ -17,6 +17,7 @@ import { blue, pink } from '@mui/material/colors'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 
+
 // component
 import Loader from "../components/loader";
 import AlertDialog from "../components/alertBox";
@@ -26,6 +27,11 @@ const logo = "icons/logo.png";
 
 // next head
 import Head from 'next/head';
+
+
+// context api
+import { useWrapper } from "../lib/contextApi";
+
 
 
 interface ResponseType {
@@ -69,8 +75,9 @@ const styles = {
 
 export default function SignUp() {
 
+  const { session } = useWrapper();
   const [loader, setLoader] = useState(false)
-  const Router = useRouter()
+  const router = useRouter()
 
   const [number, setNumber] = useState("");
 
@@ -105,129 +112,137 @@ export default function SignUp() {
       setLoader(false);
       const { message, errors } = response;
       if (message === "success") {
-        Router.push("/signin")
+        router.push("/signin")
       }
       else if (message === "failed") {
         errors.map((errorObject) => {
-          return(<AlertDialog heading="Error" text={errorObject["error"]} />);
+          return (<AlertDialog heading="Error" text={errorObject["error"]} />);
         });
       }
       else {
-        return( <AlertDialog heading="Error" text="Some Server error" /> );
+        return (<AlertDialog heading="Error" text="Some Server error" />);
       }
     }
     else {
-      return(<AlertDialog heading="Error" text="please enter valid number " />);
+      return (<AlertDialog heading="Error" text="please enter valid number " />);
     }
   }
-
-  return (
-    <div style={{ backgroundColor: "white", height: "100vh", width: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}>
-      <Head>
-        <title>SignUp</title>
-      </Head>
-      <ThemeProvider theme={theme}>
-        <img src={logo} style={{ height: "150px", width: "350px", marginTop: "50px" }} />
-        <Container component="main" maxWidth="xs" style={styles}>
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
-              <AccountBoxIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5" style={{ color: 'black' }}>
-              Sign up
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} method="post" >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoComplete="given-name"
-                    name="firstName"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="mobileNumber"
-                    label="Phone No."
-                    name="mobileNumber"
-                    autoComplete="mobileNumber"
-                    onChange={handlefields}
-                    value={number}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                  />
-                </Grid>
-                {/* <Grid item xs={12}>
+  if (!session) {
+    return (
+      <div style={{ backgroundColor: "white", height: "100vh", width: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}>
+        <Head>
+          <title>SignUp</title>
+        </Head>
+        <ThemeProvider theme={theme}>
+          <img src={logo} style={{ height: "150px", width: "350px", marginTop: "50px" }} />
+          <Container component="main" maxWidth="xs" style={styles}>
+            <CssBaseline />
+            <Box
+              sx={{
+                marginTop: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Avatar sx={{ m: 1, bgcolor: 'hotpink' }}>
+                <AccountBoxIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5" style={{ color: 'black' }}>
+                Sign up
+              </Typography>
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} method="post" >
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete="given-name"
+                      name="firstName"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      autoComplete="family-name"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="mobileNumber"
+                      label="Phone No."
+                      name="mobileNumber"
+                      autoComplete="mobileNumber"
+                      onChange={handlefields}
+                      value={number}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                    />
+                  </Grid>
+                  {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid> */}
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign Up
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item >
-                  <Link href="signin" variant="body2">
-                    {"Already have an account? Sign In"}
-                  </Link>
                 </Grid>
-              </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                  <Grid item >
+                    <Link href="signin" variant="body2">
+                      {"Already have an account? Sign In"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Box>
             </Box>
-          </Box>
-          <Copyright sx={{ mt: 5 }} />
-        </Container>
-      </ThemeProvider>
-      {loader && <Loader />}
-    </div>
-  );
+            <Copyright sx={{ mt: 5 }} />
+          </Container>
+        </ThemeProvider>
+        {loader && <Loader />}
+      </div>
+    );
+  }
+  else {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <h2>You are logged in <a style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }} onClick={() => { router.push("/home") }} > Go to Home</a> </h2>
+      </div>
+    )
+  }
 }

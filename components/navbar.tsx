@@ -13,17 +13,22 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { grey } from '@mui/material/colors';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 // router
 import { useRouter } from "next/router";
 
+// context api
+import { useWrapper } from "../lib/contextApi";
 
 
-const ResponsiveAppBar = ({color,colour,callBack}) => {
+// logo
+const logo = "icons/logo.png";
+
+const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
 
   const router = useRouter();
- 
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -43,17 +48,16 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
     setAnchorElUser(null);
   };
 
+  const { sessionCallback } = useWrapper()
 
-
-
-
-  const styles = {
-    width: '100%',
-    backgroundColor: color,
-  }
   return (
     <React.Fragment>
-      <AppBar position="static" style={styles}>
+      <AppBar position="static" style={{
+        width: '100%',
+        backgroundColor: color,
+        position: 'fixed',
+        zIndex: "10"
+      }}>
         <Container maxWidth="xl" >
           <Toolbar disableGutters>
             {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -72,7 +76,7 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
                 textDecoration: 'none',
               }}
             >
-              ASH
+              PORTFOLIO
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -86,7 +90,7 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
               >
                 <MenuIcon />
               </IconButton>
-              <Menu 
+              <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
@@ -103,7 +107,7 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
                 sx={{
                   display: { xs: 'block', md: 'none', },
                 }}
-                
+
               >
                 <MenuItem onClick={() => { router.push("/home") }}>
                   <Typography textAlign="center" >Home</Typography>
@@ -167,7 +171,7 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
 
               </Button>
               <Button
-                onClick={() => { router.push("/projectScreen") }}
+                onClick={createProject}
                 sx={{ my: 2, color: colour, display: 'block' }}
               >
                 Create Project
@@ -225,7 +229,9 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                  <AccountCircleIcon  sx= {{fontSize:"40px"}} />
+
                 </IconButton>
               </Tooltip>
               <Menu
@@ -248,7 +254,7 @@ const ResponsiveAppBar = ({color,colour,callBack}) => {
                 <MenuItem onClick={() => { router.push("/userProfile") }}>
                   <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => { router.push("") }}>
+                <MenuItem onClick={() => { sessionCallback() }}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               </Menu>

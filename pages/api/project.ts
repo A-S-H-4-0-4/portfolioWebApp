@@ -13,8 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getSession(req);
     const { method, body } = req;
     const { userId } = body;
-    console.log(body);
-
     if (userId !== null) {
         if (method === "GET") {
             let responseObject: ResponseType;
@@ -27,7 +25,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             title: true,
                             description: true,
                             thumbnailurl: true,
-                            projectLink:true,
+                            projectLink: true,
+                            date: true
                         }
                     }
                 );
@@ -38,16 +37,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 };
                 console.log(result);
                 res.status(HttpStatus.OK).json(responseObject);
-            } catch (error) { }
+            } catch (error) {
+                responseObject = {
+                    message: "failed",
+                    data: {},
+                    errors: [{ errorMessage: error }],
+                };
+                res.status(HttpStatus.BAD_REQUEST).json(responseObject)
+            }
         } else if (method === "POST") {
             let responseObject: ResponseType
             try {
-                let { title, videoUrl, thumbnailurl, description, techStack, projectcontent,projectLink } = body
+                let { title, videoUrl, thumbnailurl, description, techStack, projectContent, projectLink } = body
                 techStack = JSON.parse(techStack)
-                console.log(projectcontent);
+                console.log(projectContent);
                 console.log("i am wrong");
 
-                projectcontent = JSON.parse(projectcontent)
+                projectContent = JSON.parse(projectContent)
                 //  console.log(projectcontent);
 
                 techStack = techStack.map((obj: any, index: number) => {
@@ -57,26 +63,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     }
                 });
                 console.log(techStack);
-                projectcontent = projectcontent.map((obj: any, index: number) => {
+                projectContent = projectContent.map((obj: any, index: number) => {
                     return {
                         type: obj["type"],
                         content: obj["content"],
                         language: obj["language"],
                     }
                 })
-                console.log(projectcontent);
+                console.log(projectContent);
                 const result = await prisma.project.create({
                     data: {
                         title: title,
                         videoUrl: videoUrl,
                         thumbnailurl: thumbnailurl,
                         description: description,
-                        projectLink:projectLink!==null?projectLink:undefined,
+                        projectLink: projectLink !== null ? projectLink : undefined,
                         techStack: {
                             create: techStack
                         },
                         projectContent: {
-                            create: projectcontent
+                            create: projectContent
                         },
                         user: {
                             connect: {

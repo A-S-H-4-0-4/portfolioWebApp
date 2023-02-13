@@ -13,7 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { id } = query
     const queryid: string = id.toString();
-    console.log(queryid)
     if (method === "GET") {
         let responseObject: ResponseType;
         try {
