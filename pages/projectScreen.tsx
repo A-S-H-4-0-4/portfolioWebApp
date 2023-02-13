@@ -104,7 +104,7 @@ const ProjectScreen = () => {
       } 
       const downloadCallback = (url:string)=>{
         switch (path) {
-          case "videoUrl":
+          case "projectVideo":
             setVideoUrl(url)
             break;
           case 'thumbnailUrl':

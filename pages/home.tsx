@@ -42,7 +42,8 @@ const Home = () => {
   const [matches, setMatches] = useState(false);
   const [showName, setShowName] = useState(false);
   const [projects,setProjects] = useState([])
-  const { session } = useWrapper();
+  const { session,theme } = useWrapper();
+  
   var [loader,setLoader] = useState(false)
 
   const componentDidMount = async() => {
