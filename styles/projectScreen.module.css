@@ -23,30 +23,37 @@
   height: 650px;
   display: flex;
   width: 98%;
-  margin-left: 2%;
+  /* margin-left: 2%; */
   margin-top: 10px;
   /* border: 1px solid red; */
+  justify-content: space-around;
 }
 
 .video {
+  height: 650px;
   width: 60%;
-  /* border: 1px solid blue; */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.bar{
-    height: 100%;
-    width: 40%;
-    display: flex;
-    align-items: center;
-    /* justify-content: center; */
-    flex-direction: column;
-    /* border: 1px solid rgb(10, 208, 83); */
-    margin-top: 20px;
+.bar {
+  height: 100%;
+  width: 38%;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  flex-direction: column;
+  /* border: 1px solid rgb(10, 208, 83); */
+  overflow: hidden;
 }
+
 .content {
   display: flex;
   flex-direction: column;
   margin-left: 2%;
+  margin-top: 2%;
   width: 90%;
 }
 

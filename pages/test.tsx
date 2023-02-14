@@ -14,6 +14,7 @@ import MultiActionAreaCard from "../components/card";
 import CodeBlockDefaultExample from "../components/codeBlock";
 import AlertDialog from "../components/alertBox";
 import Loader from "../components/loader";
+import { LinearProgress, Stack } from "@mui/material";
 
 const exampleCodeBlock = `<div className={T.screen}>
 <Head>
@@ -36,8 +37,8 @@ const Test = () => {
       {/* <Bar /> */}
       {/* <SignIn /> */}
       {/* <SignUp /> */}
-<AlertDialog heading = "Alert!!" text= "You Have Successfully LogedIn" />
-
+      
+{/* <AlertDialog heading = "Alert!!" text= "You Have Successfully LogedIn" /> */}
     </div>
   )
 }

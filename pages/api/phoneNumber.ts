@@ -49,7 +49,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             instaGram: (instaGram) != null ? instaGram : undefined,
                             gitHub: (gitHub) != null ? gitHub : undefined,
                             gitLab: (gitLab) != null ? gitLab : undefined,
-                            emailAddress,
+                           
                             linkedIn: (linkedIn) != null ? linkedIn : undefined,
                             twitter: (twitter) != null ? twitter : undefined,
                             resume: (resume) != null ? resume : undefined,
@@ -60,7 +60,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             instaGram,
                             gitHub,
                             gitLab,
-                            emailAddress,
+                            
                             linkedIn,
                             twitter,
                             userid: userId,

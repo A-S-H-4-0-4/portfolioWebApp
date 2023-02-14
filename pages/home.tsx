@@ -16,16 +16,22 @@ import { useRouter } from "next/router";
 // head
 import Head from "next/head";
 
+// theme
+import { themes } from "../lib/theme";
+
 // components
 import ResponsiveAppBar from "../components/navbar";
 import MultiActionAreaCard from "../components/card";
-
 import Footer from "../components/footer";
 import { callAPI } from "../api/api";
-
+import { log } from "console";
 
 // image
 const bannerImage = "/images/banner.jpg";
+const banner2Image = "/images/banner2.avif";
+
+// loader
+import { Loader3 } from "../components/loader";
 
 interface ResponseType {
   message: string;
@@ -35,65 +41,53 @@ interface ResponseType {
 
 const Home = () => {
   const router = useRouter();
-  const [color, setColor] = React.useState("white");
-  const [headcolor, setHeadColor] = React.useState("black");
-  const [textcolor, setTextColor] = React.useState("black");
-  const [backgroundColor, setbackgroundColor] = React.useState("white");
+
+  const [themeColor, setThemeColor] = useState(themes.light);
   const [matches, setMatches] = useState(false);
   const [showName, setShowName] = useState(false);
-  const [projects,setProjects] = useState([])
-  const { session,theme } = useWrapper();
-  
-  var [loader,setLoader] = useState(false)
+  const [projects, setProjects] = useState([]);
+  const { session, theme, themeCallback } = useWrapper();
+  const [loader, setLoader] = useState(false);
 
-  const componentDidMount = async() => {
-    setLoader(true)
-    
-    
-    const response: ResponseType = await callAPI(
-      'project',
-    );
+  const componentDidMount = async () => {
+    setLoader(true);
+
+    const response: ResponseType = await callAPI("project");
 
     const { message, data, errors } = response;
     if (message === "success") {
       if (typeof data === "object") {
-        console.log("data");
-        
-        console.log(data);
-        setProjects(data['data'])
+        setProjects(data["data"]);
       }
     } else if (message === "failure") {
-      errors.map((errorObject:any) => {
+      errors.map((errorObject: any) => {
         const { errorMessage } = errorObject;
         alert(errorMessage);
       });
     } else {
       alert("Some Server error");
     }
-
-  }
-  const moveToProject = (name:string)=>{
-      const check:any[] = projects.filter((data:any,index:number)=>{
-        return data['title'] === name;
-      }) 
-      if (check.length>0) {
-        return alert("Project name already exist")
-      }
-      router.push("/projectScreen",{
-        query:{
-          'name':name
-        }
-      })
-  }
-
-
-  useEffect(()=>{
-    componentDidMount()
-
-    return ()=>{}
-  },[])
-
-
+    setLoader(false);
+  };
+  const moveToProject = (name: string) => {
+    const check: any[] = projects.filter((data: any, index: number) => {
+      return data["title"].toLowerCase() === name.toLowerCase();
+    });
+    if (check.length > 0) {
+      return alert("Project name already exist");
+    }
+    if (name.length > 0) {
+      router.push(
+        {
+          pathname: "/projectScreen",
+          query: { name: name },
+        },
+        "/projectScreen"
+      );
+    } else {
+      alert("Enter correct project name");
+    }
+  };
 
   const AddName = ({ close, save }) => {
     const [fieldName, setName] = useState("");
@@ -134,7 +128,7 @@ const Home = () => {
               }}
             >
               Add ProjectName
-              <text
+              <span
                 style={{
                   marginRight: "10px",
                   display: "flex",
@@ -149,7 +143,7 @@ const Home = () => {
                   {" "}
                   CLOSE
                 </span>
-              </text>
+              </span>
             </span>
           </div>
 
@@ -208,11 +202,13 @@ const Home = () => {
     window
       .matchMedia("(max-width: 900px)")
       .addEventListener("change", (e) => setMatches(e.matches));
-
-    // if (!session) {
-    //   router.back()
-    // }
-    console.log("home use effect");
+    componentDidMount();
+    if (theme === "light") {
+      setThemeColor(themes.light);
+    } else {
+      setThemeColor(themes.dark);
+    }
+    return () => {};
   }, []);
 
   return (
@@ -220,13 +216,12 @@ const Home = () => {
       <Head>
         <title>HOME</title>
       </Head>
-      {session === "" ? (
+      {session === null ? (
         <div></div>
       ) : (
         <div
-          className={H.screen}
           style={{
-            backgroundColor: backgroundColor,
+            backgroundColor: themeColor.background,
             height: "auto",
             width: "100%",
             display: "flex",
@@ -235,27 +230,39 @@ const Home = () => {
         >
           <ResponsiveAppBar
             callBack={() => {
-              if (color == "white") {
-                setColor("rgb(53, 53, 53)");
-                setHeadColor("lightblue");
-                setTextColor("#cccc");
-                setbackgroundColor("rgb(32, 32, 32)");
+              if (theme == "light") {
+                themeCallback("dark");
+                setThemeColor(themes.dark);
               } else {
-                setColor("white");
-                setbackgroundColor("white");
-                setHeadColor("#3a3838");
-                setTextColor("black");
+                themeCallback("light");
+                setThemeColor(themes.light);
               }
             }}
-            colour={headcolor}
-            color={color}
+            color={themeColor.navbackground}
+            colour={themeColor.text}
+            createProject={() => {
+              setShowName(true);
+            }}
           />
+
           {matches == false && (
             <div className={H.banner}>
+              <div className={H.rbanner}>
+                <img
+                  src={banner2Image}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    margin: "0px",
+                    borderRadius: "50px",
+                  }}
+                />
+              </div>
+
               <div className={H.lbanner}>
                 <h1
                   style={{
-                    color: headcolor,
+                    color: themeColor.headColor,
                     width: "80%",
                     fontFamily: "monospace",
                     letterSpacing: ".3rem",
@@ -264,7 +271,7 @@ const Home = () => {
                   {" "}
                   Welcome to my Portal!{" "}
                 </h1>
-                <p style={{ color: textcolor, width: "80%" }}>
+                <p style={{ color: themeColor.text, width: "80%" }}>
                   {" "}
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
                   adipisci mollitia facilis reiciendis quibusdam nulla repellat,
@@ -275,25 +282,16 @@ const Home = () => {
                   doloremque, dolore qui ullam? Vero illum veritatis ullam nihil
                   ?{" "}
                 </p>
-                <button
-                  onClick={() => {
-                    setShowName(true);
-                  }}
-                >
-                  Create Project
-                </button>
-              </div>
-              <div className={H.rbanner}>
-                <img src={bannerImage} />
               </div>
             </div>
           )}
+
           {matches == true && (
             <div className={H.banner}>
               <div className={H.bannertext}>
                 <h1
                   style={{
-                    color: headcolor,
+                    color: themeColor.headColor,
                     width: "80%",
                     fontFamily: "monospace",
                     letterSpacing: ".3rem",
@@ -302,7 +300,7 @@ const Home = () => {
                   {" "}
                   Welcome to my Portal!{" "}
                 </h1>
-                <p style={{ color: textcolor, width: "80%" }}>
+                <p style={{ color: themeColor.text, width: "80%" }}>
                   {" "}
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
                   adipisci mollitia facilis reiciendis quibusdam nulla repellat,
@@ -325,7 +323,7 @@ const Home = () => {
           <div className={H.content}>
             <h1
               style={{
-                color: headcolor,
+                color: themeColor.headColor,
                 fontFamily: "monospace",
                 letterSpacing: ".3rem",
                 fontSize: "30px",
@@ -334,19 +332,175 @@ const Home = () => {
               {" "}
               Projects{" "}
             </h1>
-            <div className={H.cards}>
-              {projects.map((data:any,index:number)=>{
-                return <MultiActionAreaCard 
-                key={index}
-                description={data['description']} id={data['id']} title={data['title']} thumbanailUrl={data['thumbanailUrl']} />
-              })}
-              
-            </div>
+            {projects.length > 0 ? (
+              loader ? (
+                <Loader3 />
+              ) : (
+                <div className={H.cards}>
+                  {projects.map((data: any, index: number) => {
+                    return (
+                      <MultiActionAreaCard
+                        key={index}
+                        description={data["description"]}
+                        id={data["id"]}
+                        title={data["title"]}
+                        thumbanailUrl={data["thumbnailurl"]}
+                        date={data["date"]}
+                        backgroundColor={themeColor.cardBackground}
+                        textColor={themeColor.text}
+                        headColor={themeColor.headColor}
+                        update={true}
+                        projectUrl={data["projectLink"]}
+                      />
+                    );
+                  })}
+                </div>
+              )
+            ) : (
+              <div
+                style={{
+                  color: themeColor.text,
+                  height: "300px",
+                  backgroundColor: themeColor.cardBackground,
+                  width: "80%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "2px doted blue",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setShowName(true);
+                }}
+              >
+                <h3> CREATE PROJECT +</h3>
+              </div>
+            )}
           </div>
-          <Footer />
+          {matches !== true ? (
+            <div className={H.content}>
+              <h1
+                style={{
+                  color: themeColor.headColor,
+                  fontFamily: "monospace",
+                  letterSpacing: ".3rem",
+                  fontSize: "30px",
+                }}
+              >
+                Declaration
+              </h1>
+              <div
+                className={H.declaration}
+                style={{
+                  boxShadow: "1px 1px 2px 2px grey",
+                  width: "50%",
+                  borderRadius: "5px",
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  flexDirection: "column",
+                }}
+              >
+                <p
+                  style={{
+                    color: themeColor.text,
+                    fontWeight: "bold",
+                    width: "90%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "50px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  {" "}
+                  I do hereby state that all the details mentioned above are
+                  accurate to the best of my familiarity and confidence. I bear
+                  the accountability for any blunder or mistake in the future.{" "}
+                </p>
+                <span
+                  style={{
+                    color: themeColor.text,
+                    fontWeight: "bold",
+                    marginTop: "40px",
+                    marginBottom: "20px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  Aayush Bhardwaj
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className={H.content}>
+              <h1
+                style={{
+                  color: themeColor.headColor,
+                  fontFamily: "monospace",
+                  letterSpacing: ".3rem",
+                  fontSize: "30px",
+                }}
+              >
+                Declaration
+              </h1>
+              <div
+                className={H.declaration}
+                style={{
+                  boxShadow: "1px 1px 2px 2px grey",
+                  width: "80%",
+                  borderRadius: "5px",
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  flexDirection: "column",
+                }}
+              >
+                <p
+                  style={{
+                    color: themeColor.text,
+                    fontWeight: "bold",
+                    width: "90%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "50px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  {" "}
+                  I do hereby state that all the details mentioned above are
+                  accurate to the best of my familiarity and confidence. I bear
+                  the accountability for any blunder or mistake in the future.{" "}
+                </p>
+                <span
+                  style={{
+                    color: themeColor.text,
+                    fontWeight: "bold",
+                    marginTop: "40px",
+                    marginBottom: "20px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  Aayush Bhardwaj
+                </span>
+              </div>
+            </div>
+          )}
+          <Footer
+            textColor={themeColor.text}
+            iconColor={themeColor.iconColor}
+            borderColor={themeColor.borderColor}
+            backgroundColor={themeColor.navbackground}
+          />
         </div>
       )}
-      {showName && <AddName close={()=>{setShowName(false)}} save={moveToProject} />}
+
+      {showName && (
+        <AddName
+          close={() => {
+            setShowName(false);
+          }}
+          save={moveToProject}
+        />
+      )}
     </React.Fragment>
   );
 };

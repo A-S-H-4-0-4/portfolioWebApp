@@ -16,19 +16,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const result = await prisma.userProfile.findFirst(
                 {
                     where: {
-                        user:{
-                            phoneNumber:queryid
+                        user: {
+                            phoneNumber: queryid
                         }
                     },
                     select: {
                         userImage: true,
                         bannerImage: true,
-                        emailAddress: true,
                         gitHub: true,
                         gitLab: true,
                         instaGram: true,
                         linkedIn: true,
                         resume: true,
+                        homePageTitle: true,
+                        description: true,
                         user: {
                             select: {
                                 name: true,
