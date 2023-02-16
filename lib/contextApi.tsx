@@ -1,4 +1,4 @@
-import { createContext, useContext,useEffect, useState} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 
 // sessionStorage
@@ -6,10 +6,11 @@ import { getData, saveData } from "../local/storage";
 import { callAPI } from '../api/api';
 
 interface wrapperInterface {
-  session:string,
-  sessionCallback:Function,
-  themeCallback:Function,
-  theme:string,
+  session: string,
+  sessionCallback: Function,
+  themeCallback: Function,
+  theme: string,
+  phoneNumber: number
 }
 
 interface ResponseType {
@@ -18,73 +19,76 @@ interface ResponseType {
   errors: [];
 }
 
-const setCallback = (value:boolean)=>{
-  
+const setCallback = (value: boolean) => {
+
 }
 
-const AppContext = createContext<wrapperInterface>({session:"",sessionCallback:setCallback,themeCallback:setCallback,theme:"light"});
+const AppContext = createContext<wrapperInterface>({ session: "", sessionCallback: setCallback, themeCallback: setCallback, theme: "light", phoneNumber: null });
 
 
-export const  AppWrapper = ({ children }) => {
-  const [session,setSession] = useState("")
+export const AppWrapper = ({ children }) => {
+  const [session, setSession] = useState("")
   const router = useRouter()
-  const [theme,setTheme] = useState("light") 
-  const [phoneNumber,setPhoneNumber] = useState("")
-  const componentDidMount = async() => {
-      if (session.trim()==="") {
-      const value = getData("session") 
+  const [theme, setTheme] = useState("light")
+  const [phoneNumber, setPhoneNumber] = useState<number>()
+  const componentDidMount = async () => {
+    
+    if (session.trim() === "") {
+      const value = getData("session")
       setSession(value)
     }
-    const oldTheme:string|null = getData("theme")
-    if(oldTheme){
+    const oldTheme: string | null = getData("theme")
+    if (oldTheme) {
       setTheme(oldTheme)
     }
-    const response: ResponseType = await callAPI(
-      'phoneNumber',
-    );
-    const { message, data, errors } = response;
-    if (message === "success") {
-      if (typeof data === "object") {
-        const phoneNumber = data['data'].phoneNumber
-        setPhoneNumber(phoneNumber);
+
+    if (session.trim() != "") {
+      const response: ResponseType = await callAPI(
+        'phoneNumber',
+      );
+      const { message, data, errors } = response;
+      if (message === "success") {
+        if (typeof data === "object") {
+          const phoneNumber = data['data'].phoneNumber
+          setPhoneNumber(+phoneNumber);
+        }
+      } else if (message === "failed") {
+        errors.map((errorObject: any) => {
+          const { errorMessage } = errorObject;
+          alert(errorMessage);
+        });
+      } else {
+        alert("Some Server error");
       }
-    } else if (message === "failed") {
-      errors.map((errorObject: any) => {
-        const { errorMessage } = errorObject;
-        alert(errorMessage);
-      });
-    } else {
-      alert("Some Server error");
     }
- }
-  useEffect(()=>{
-    if (window.Object!==undefined) {
+  }
+  useEffect(() => {
+    if (window.Object !== undefined) {
       componentDidMount()
     }
-    return ()=>{}
-  },[])
+    return () => { }
+  }, [])
 
-    
-  const themeCallback = (value:string)=>{
 
+  const themeCallback = (value: string) => {
     setTheme(value)
-    saveData("theme",value)
+    saveData("theme", value)
   }
-  
-  const sessionCallback = ()=>{
+
+  const sessionCallback = () => {
     sessionStorage.clear();
     setSession("");
     router.push("/signin")
   }
 
   return (
-    <AppContext.Provider value={{session,sessionCallback:sessionCallback,theme,themeCallback:themeCallback}}  >
+    <AppContext.Provider value={{ session, sessionCallback: sessionCallback, theme, themeCallback: themeCallback, phoneNumber }}  >
       {children}
     </AppContext.Provider>
   );
 }
 
-export const useWrapper = ()=>{
+export const useWrapper = () => {
 
   return useContext(AppContext)
 

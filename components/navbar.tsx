@@ -14,6 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
+// styles
+import PS from "../styles/projectScreen.module.css";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -29,13 +32,15 @@ import { useRouter } from "next/router";
 
 // context api
 import { useWrapper } from "../lib/contextApi";
+import phoneNumber from "../pages/api/phoneNumber";
 
 // logo
 const logo = "icons/logo.png";
 
 const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
   const router = useRouter();
-
+  const [showName, setShowName] = React.useState(false);
+  const [pathName, setPathName] = React.useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -59,7 +64,13 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
     setAnchorElUser(null);
   };
 
-  const { sessionCallback } = useWrapper();
+  const { sessionCallback,phoneNumber } = useWrapper();
+
+  React.useEffect(() => {
+    if (router.pathname === '/home'||router.pathname === '/userProfile') {
+      setPathName(true)
+    }
+  }, []);
 
   return (
     <React.Fragment>
@@ -129,13 +140,14 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
                 >
                   <Typography textAlign="center">Home</Typography>
                 </MenuItem>
-                <MenuItem
+                {pathName && <MenuItem
                   onClick={() => {
                     router.push("/projectScreen");
                   }}
                 >
-                  <Typography textAlign="center">Create Project</Typography>
+                  <Typography textAlign="center" onClick={createProject} >Create Project</Typography>
                 </MenuItem>
+                }
                 <MenuItem>
                   <Typography textAlign="center">Resume</Typography>
                 </MenuItem>
@@ -146,6 +158,12 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
                 >
                   <Typography textAlign="center">Contact</Typography>
                 </MenuItem>
+                {pathName && <MenuItem
+                  onClick={() => { setShowName(true) }}
+                >
+                  <Typography textAlign="center">Share</Typography>
+                </MenuItem>
+                }
                 <MenuItem onClick={callBack}>
                   <DarkModeIcon sx={{ color: "black" }} />
                 </MenuItem>
@@ -195,70 +213,30 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
               >
                 Contact
               </Button>
-              <Button
+              {pathName && <Button
                 sx={{ my: 2, color: colour, display: "block" }}
-                onClick={() => {}}
+                onClick={createProject}
               >
                 Create Project
               </Button>
+              }
+              {pathName &&
+                <Button
+                  sx={{ my: 2, color: colour, display: "block" }}
+                  onClick={() => { setShowName(true) }}
+                >
+                  Share
+                </Button>
+              }
 
-             
               <Button
                 onClick={callBack}
-                // sx={{ my: 2, color: '#121212', display: 'block' }}
+              // sx={{ my: 2, color: '#121212', display: 'block' }}
               >
                 <DarkModeIcon sx={{ color: colour }} />
               </Button>
-              <Tooltip
-                title="Add TechStack"
-                sx={{ color: colour, cursor: "pointer" }}
-              >
-                <TwitterShareButton
-                  url={"https://github.com/next-share"}
-                  title={
-                    "next-share is a social share buttons for your next React apps."
-                  }
-                >
-                  <TwitterIcon size={32} round />
-                </TwitterShareButton>
-              </Tooltip>
 
-              <Tooltip
-                title="Add TechStack"
-                sx={{ color: colour, cursor: "pointer" }}
-              >
-                <LinkedinShareButton url={"https://github.com/next-share"}>
-                  <LinkedinIcon size={32} round />
-                </LinkedinShareButton>
-              </Tooltip>
-              <Tooltip
-                title=""
-                sx={{ color: colour, cursor: "pointer" }}
-              >
-                <FacebookShareButton
-                  url={"https://github.com/next-share"}
-                  quote={
-                    "next-share is a social share buttons for your next React apps."
-                  }
-                  hashtag={"#nextshare"}
-                >
-                  <FacebookIcon size={32} round />
-                </FacebookShareButton>
-              </Tooltip>
-              <Tooltip
-                title="Add TechStack"
-                sx={{ color: colour, cursor: "pointer" }}
-              >
-                <WhatsappShareButton
-                  url={"https://github.com/next-share"}
-                  title={
-                    "next-share is a social share buttons for your next React apps."
-                  }
-                  separator=":: "
-                >
-                  <WhatsappIcon size={32} round />
-                </WhatsappShareButton>
-              </Tooltip>
+              {/* */}
 
             </Box>
 
@@ -304,7 +282,120 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
           </Toolbar>
         </Container>
       </AppBar>
+      {showName && (
+        <Share
+          close={() => {
+            setShowName(false);
+          }}
+          colour={colour}
+        />
+      )}
     </React.Fragment>
   );
 };
 export default ResponsiveAppBar;
+
+const Share = ({ close, colour }) => {
+
+  return (
+    <div className={PS.glass} style={{ zIndex: "100" }} >
+      <div
+        className={PS.cBox}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          // alignItems: "center",
+          // justifyContent: "space-between",
+          background: "white",
+          height: "15%",
+          width: "20%"
+        }}
+      >
+        <div
+          style={{
+            // borderBottom: "1px solid black",
+            display: "flex",
+            height: "15%",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              fontFamily: "monospace",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              color: " rgb(41, 91, 228)",
+              marginLeft: "10px",
+              marginTop: "5px"
+            }}
+          >
+            Share
+            <span
+              style={{
+                marginRight: "10px",
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                fontFamily: "monospace",
+              }}
+              onClick={close}
+            >
+              <span
+                style={{ height: "18px", color: "red", fontWeight: "600" }}
+              >
+                {" "}
+                Close
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <Box sx={{ with: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-around" }} >
+
+          <TwitterShareButton
+            url={`http://localhost:3000/project${phoneNumber}`}
+            title={
+              "This is my portfolio. go check it out :)."
+            }
+          >
+            <TwitterIcon size={36} round className={PS.icon} />
+          </TwitterShareButton>
+
+
+          <LinkedinShareButton url={`http://localhost:3000/project${phoneNumber}`}>
+            <LinkedinIcon size={36} round className={PS.icon} />
+          </LinkedinShareButton>
+
+
+          <FacebookShareButton
+            url={`http://localhost:3000/project${phoneNumber}`}
+            quote={
+              "This is my portfolio. go check it out :)."
+            }
+            hashtag={"#nextshare"}
+          >
+            <FacebookIcon size={36} round className={PS.icon} />
+          </FacebookShareButton>
+
+          <WhatsappShareButton
+            url={`http://localhost:3000/project${phoneNumber}`}
+            title={
+              "This is my portfolio. go check it out :)."
+            }
+            separator=":: "
+          >
+            <WhatsappIcon size={36} round className={PS.icon} />
+          </WhatsappShareButton>
+
+        </Box>
+
+
+      </div>
+    </div>
+  );
+};

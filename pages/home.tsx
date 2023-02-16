@@ -208,7 +208,7 @@ const Home = () => {
     } else {
       setThemeColor(themes.dark);
     }
-    return () => {};
+    return () => { };
   }, []);
 
   return (
@@ -240,9 +240,7 @@ const Home = () => {
             }}
             color={themeColor.navbackground}
             colour={themeColor.text}
-            createProject={() => {
-              setShowName(true);
-            }}
+            createProject={() => { setShowName(true) }}
           />
 
           {matches == false && (

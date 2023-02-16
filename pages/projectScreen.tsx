@@ -398,9 +398,7 @@ const ProjectScreen = () => {
             }}
             color={themeColor.navbackground}
             colour={themeColor.text}
-            createProject={() => {
-              alert("you already on create project screen ")
-            }}
+            createProject={()=>{}}
           />
           <div
             className={PS.selctType}
