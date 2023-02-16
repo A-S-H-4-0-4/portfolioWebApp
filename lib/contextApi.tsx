@@ -23,16 +23,16 @@ const setCallback = (value: boolean) => {
 
 }
 
-const AppContext = createContext<wrapperInterface>({ session: "", sessionCallback: setCallback, themeCallback: setCallback, theme: "light", phoneNumber: null });
+const AppContext = createContext<wrapperInterface>({ session: "", sessionCallback: setCallback, themeCallback: setCallback, theme: "light", phoneNumber: 0 });
 
 
 export const AppWrapper = ({ children }) => {
   const [session, setSession] = useState("")
   const router = useRouter()
   const [theme, setTheme] = useState("light")
-  const [phoneNumber, setPhoneNumber] = useState<number>()
+  const [phoneNumber, setPhoneNumber] = useState<number>(0)
   const componentDidMount = async () => {
-    
+
     if (session.trim() === "") {
       const value = getData("session")
       setSession(value)
@@ -42,23 +42,27 @@ export const AppWrapper = ({ children }) => {
       setTheme(oldTheme)
     }
 
-    if (session.trim() != "") {
-      const response: ResponseType = await callAPI(
-        'phoneNumber',
-      );
-      const { message, data, errors } = response;
-      if (message === "success") {
-        if (typeof data === "object") {
-          const phoneNumber = data['data'].phoneNumber
-          setPhoneNumber(+phoneNumber);
+
+    if (session.trim() !== "") {
+      if (phoneNumber === 0) {
+        const response: ResponseType = await callAPI(
+          'phoneNumber',
+        );
+        const { message, data, errors } = response;
+        if (message === "success") {
+          if (typeof data === "object") {
+            const phoneNumber = data['data'].phoneNumber
+            setPhoneNumber(+phoneNumber);
+          }
+        } else if (message === "failed") {
+          errors.map((errorObject: any) => {
+            const { errorMessage } = errorObject;
+            alert(errorMessage);
+          });
+        } else {
+          alert("Some Server error");
+
         }
-      } else if (message === "failed") {
-        errors.map((errorObject: any) => {
-          const { errorMessage } = errorObject;
-          alert(errorMessage);
-        });
-      } else {
-        alert("Some Server error");
       }
     }
   }

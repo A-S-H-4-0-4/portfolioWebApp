@@ -24,7 +24,6 @@ import ResponsiveAppBar from "../components/navbar";
 import MultiActionAreaCard from "../components/card";
 import Footer from "../components/footer";
 import { callAPI } from "../api/api";
-import { log } from "console";
 
 // image
 const bannerImage = "/images/banner.jpg";

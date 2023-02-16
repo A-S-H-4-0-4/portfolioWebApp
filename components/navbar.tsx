@@ -32,13 +32,13 @@ import { useRouter } from "next/router";
 
 // context api
 import { useWrapper } from "../lib/contextApi";
-import phoneNumber from "../pages/api/phoneNumber";
-
 // logo
 const logo = "icons/logo.png";
 
+
 const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
   const router = useRouter();
+  const { sessionCallback } = useWrapper();
   const [showName, setShowName] = React.useState(false);
   const [pathName, setPathName] = React.useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -64,7 +64,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
     setAnchorElUser(null);
   };
 
-  const { sessionCallback,phoneNumber } = useWrapper();
+  
 
   React.useEffect(() => {
     if (router.pathname === '/home'||router.pathname === '/userProfile') {
@@ -296,7 +296,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
 export default ResponsiveAppBar;
 
 const Share = ({ close, colour }) => {
-
+  const { phoneNumber } = useWrapper();
   return (
     <div className={PS.glass} style={{ zIndex: "100" }} >
       <div
@@ -358,7 +358,7 @@ const Share = ({ close, colour }) => {
         <Box sx={{ with: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-around" }} >
 
           <TwitterShareButton
-            url={`http://localhost:3000/project${phoneNumber}`}
+            url={`http://localhost:3000/project/${phoneNumber}`}
             title={
               "This is my portfolio. go check it out :)."
             }
@@ -367,13 +367,13 @@ const Share = ({ close, colour }) => {
           </TwitterShareButton>
 
 
-          <LinkedinShareButton url={`http://localhost:3000/project${phoneNumber}`}>
+          <LinkedinShareButton url={`http://localhost:3000/project/${phoneNumber}`}>
             <LinkedinIcon size={36} round className={PS.icon} />
           </LinkedinShareButton>
 
 
           <FacebookShareButton
-            url={`http://localhost:3000/project${phoneNumber}`}
+            url={`http://localhost:3000/project/${phoneNumber}`}
             quote={
               "This is my portfolio. go check it out :)."
             }
@@ -383,7 +383,7 @@ const Share = ({ close, colour }) => {
           </FacebookShareButton>
 
           <WhatsappShareButton
-            url={`http://localhost:3000/project${phoneNumber}`}
+            url={`http://localhost:3000/project/${phoneNumber}`}
             title={
               "This is my portfolio. go check it out :)."
             }
