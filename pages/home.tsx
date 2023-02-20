@@ -46,11 +46,11 @@ const Home = () => {
   const [matches, setMatches] = useState(false);
   const [showName, setShowName] = useState(false);
   const [projects, setProjects] = useState([]);
-  const { session, theme, themeCallback } = useWrapper();
+  const { session, theme, themeCallback,data } = useWrapper();
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loader, setLoader] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [userName, setUserName] = useState(false);
+  // const [data, setData] = useState<object>({});
 
   const loadProject = async () => {
     setLoader(true);
@@ -93,33 +93,33 @@ const Home = () => {
     }
   }
 
-
   const componentDidMount = async () => {
-    if (session) {
-      loadPhoneNumber();
-      loadProject();
-      setLoader(true);
-      const response: ResponseType = await callAPI(
-        'profile',
-      );
-      setLoader(false);
-      const { message, data, errors } = response;
-      if (message === "success") {
-        if (typeof data === "object") {
-          setUserName(data['data'].user['name'])
-        }
-      } else if (message === "failed") {
-        errors.map((errorObject: any) => {
-          const { errorMessage } = errorObject["error"];
-          alert(errorMessage);
-        });
-      } else {
-        alert("Some Server error");
-      }
-    }
+    loadPhoneNumber();
+    loadProject();
+    setLoader(true);
+    // const response: ResponseType = await callAPI(
+    //   'profile',
+    // );
+    // setLoader(false);
+    // const { message, data, errors } = response;
+    // if (message === "success") {
+    //   if (typeof data === "object") {
+    //     setData(data['data']);
+    //   }
+    // } else if (message === "failed") {
+    //   errors.map((errorObject: any) => {
+    //     const { errorMessage } = errorObject["error"];
+    //     alert(errorMessage);
+    //   });
+    // } else {
+    //   alert("Some Server error");
+    // }
+
   };
- 
-  
+
+
+
+
   const moveToProject = (name: string) => {
     const check: any[] = projects.filter((data: any, index: number) => {
       return data["title"].toLowerCase() === name.toLowerCase();
@@ -299,7 +299,17 @@ const Home = () => {
           {matches == false && (
             <div className={H.banner}>
               <div className={H.rbanner}>
+                { data!==undefined ? 
                 <img
+                src={data['bannerImage']}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  margin: "0px",
+                  borderRadius: "50px",
+                }}
+              />
+                : <img
                   src={banner2Image}
                   style={{
                     height: "100%",
@@ -307,11 +317,11 @@ const Home = () => {
                     margin: "0px",
                     borderRadius: "50px",
                   }}
-                />
+                />}
               </div>
 
               <div className={H.lbanner}>
-                <h1
+                {data===undefined?<h1
                   style={{
                     color: themeColor.headColor,
                     width: "80%",
@@ -321,26 +331,7 @@ const Home = () => {
                 >
                   {" "}
                   Welcome to my Portal!{" "}
-                </h1>
-                <p style={{ color: themeColor.text, width: "80%" }}>
-                  {" "}
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-                  adipisci mollitia facilis reiciendis quibusdam nulla repellat,
-                  consequuntur commodi maiores officiis ea ducimus quidem
-                  voluptates eaque nesciunt non, magni nobis enim?
-                  Reprehenderit, fugiat architecto. Assumenda veritatis ratione
-                  temporibus, nostrum sunt impedit quas molestias eos
-                  doloremque, dolore qui ullam? Vero illum veritatis ullam nihil
-                  ?{" "}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {matches == true && (
-            <div className={H.banner}>
-              <div className={H.bannertext}>
-                <h1
+                </h1>:<h1
                   style={{
                     color: themeColor.headColor,
                     width: "80%",
@@ -349,9 +340,9 @@ const Home = () => {
                   }}
                 >
                   {" "}
-                  Welcome to my Portal!{" "}
-                </h1>
-                <p style={{ color: themeColor.text, width: "80%" }}>
+                  {data['homePageTitle']}
+                </h1>}
+                {data === undefined ? <p style={{ color: themeColor.text, width: "80%" }}>
                   {" "}
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
                   adipisci mollitia facilis reiciendis quibusdam nulla repellat,
@@ -366,7 +357,58 @@ const Home = () => {
                   Tempora itaque porro sit at placeat suscipit vero, quos
                   officiis atque ipsam vel unde rem eum modi vitae repellendus
                   id, expedita tempore?{" "}
-                </p>
+                </p> :
+                  <p style={{ color: themeColor.text, width: "80%" }}>
+                    { data['description']}
+                  </p>}
+              </div>
+            </div>
+          )}
+
+          {matches == true && (
+            <div className={H.banner}>
+              <div className={H.bannertext}>
+              {data===undefined?<h1
+                  style={{
+                    color: themeColor.headColor,
+                    width: "80%",
+                    fontFamily: "monospace",
+                    letterSpacing: ".3rem",
+                  }}
+                >
+                  {" "}
+                  Welcome to my Portal!{" "}
+                </h1>:<h1
+                  style={{
+                    color: themeColor.headColor,
+                    width: "80%",
+                    fontFamily: "monospace",
+                    letterSpacing: ".3rem",
+                  }}
+                >
+                  {" "}
+                  {data['homePageTitle']}
+                </h1>}
+                {data === undefined ? <p style={{ color: themeColor.text, width: "80%" }}>
+                  {" "}
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
+                  adipisci mollitia facilis reiciendis quibusdam nulla repellat,
+                  consequuntur commodi maiores officiis ea ducimus quidem
+                  voluptates eaque nesciunt non, magni nobis enim?
+                  Reprehenderit, fugiat architecto. Assumenda veritatis ratione
+                  temporibus, nostrum sunt impedit quas molestias eos
+                  doloremque, dolore qui ullam? Vero illum veritatis ullam nihil
+                  perferendis enim assumenda, nisi dolorum. Ipsam dolores quas
+                  facilis nisi ipsa pariatur, ullam modi quam iure labore,
+                  ducimus non magnam enim sequi omnis obcaecati veniam tempore!
+                  Tempora itaque porro sit at placeat suscipit vero, quos
+                  officiis atque ipsam vel unde rem eum modi vitae repellendus
+                  id, expedita tempore?{" "}
+                </p> :
+                  <p style={{ color: themeColor.text, width: "80%" }}>
+                    {" "}
+                    {data && data['description']}
+                  </p>}
               </div>
             </div>
           )}
@@ -477,7 +519,7 @@ const Home = () => {
                     marginLeft: "15px",
                   }}
                 >
-                  {userName}
+                  {data['user']!==undefined ? data['user'].name:<>userName</>}
                 </span>
               </div>
             </div>
@@ -530,7 +572,7 @@ const Home = () => {
                     marginLeft: "15px",
                   }}
                 >
-                  Aayush Bhardwaj
+                  {data!==undefined && data['user'].name}
                 </span>
               </div>
             </div>

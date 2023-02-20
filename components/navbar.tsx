@@ -38,7 +38,7 @@ const logo = "icons/logo.png";
 
 const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,profile }) => {
   const router = useRouter();
-  const { sessionCallback } = useWrapper();
+  const { sessionCallback,data } = useWrapper();
   const [showName, setShowName] = React.useState(false);
   const [pathName, setPathName] = React.useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -244,7 +244,18 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                  <AccountCircleIcon sx={{ fontSize: "60px" }} />
+                  {data===undefined?<AccountCircleIcon sx={{ fontSize: "60px" }} />
+                :
+                <img
+                  src={data['userImage']}
+                  style={{
+                    height: "60px",
+                    width:"60px",
+                    borderRadius:"100px",
+                    margin: "0px",
+                  }}
+                  />  
+                }
                 </IconButton>
               </Tooltip>
               <Menu

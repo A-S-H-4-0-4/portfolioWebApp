@@ -11,6 +11,7 @@ interface wrapperInterface {
   themeCallback: Function,
   theme: string,
   phoneNumber: number
+  data: {}
 }
 
 interface ResponseType {
@@ -23,7 +24,7 @@ const setCallback = (value: boolean) => {
 
 }
 
-const AppContext = createContext<wrapperInterface>({ session: "", sessionCallback: setCallback, themeCallback: setCallback, theme: "light", phoneNumber: 0 });
+const AppContext = createContext<wrapperInterface>({ session: "", sessionCallback: setCallback, themeCallback: setCallback, theme: "light", phoneNumber: 0 ,data:{}});
 
 
 export const AppWrapper = ({ children }) => {
@@ -31,6 +32,7 @@ export const AppWrapper = ({ children }) => {
   const router = useRouter()
   const [theme, setTheme] = useState("light")
   const [phoneNumber, setPhoneNumber] = useState<number>(0)
+  const [data, setData] = useState<object>({})
   const componentDidMount = async () => {
 
     if (session.trim() === "") {
@@ -41,53 +43,71 @@ export const AppWrapper = ({ children }) => {
     if (oldTheme) {
       setTheme(oldTheme)
     }
-
-    // if (session.trim() !== "") {
-    //   if (phoneNumber === 0) {
-    //     const response: ResponseType = await callAPI(
-    //       'phoneNumber',
-    //     );
-    //     const { message, data, errors } = response;
-    //     if (message === "success") {
-    //       if (typeof data === "object") {
-    //         const phoneNumber = data['data'].phoneNumber
-    //         setPhoneNumber(+phoneNumber);
-    //       }
-    //     } else if (message === "failed") {
-    //       errors.map((errorObject: any) => {
-    //         const { errorMessage } = errorObject;
-    //         alert(errorMessage);
-    //       });
-    //     } else {
-    //       alert("Some Server error");
-    //     }
-    //   }
-    // }
-  }
-  useEffect(() => {
-    if (window.Object !== undefined) {
-      componentDidMount()
+    if(getData("session")){
+    const response: ResponseType = await callAPI(
+        'profile',
+      );
+      const { message, data, errors } = response;
+      if (message === "success") {
+        if (typeof data === "object") {
+          setData(data['data']);
+        }
+      } else if (message === "failed") {
+        errors.map((errorObject: any) => {
+          const { errorMessage } = errorObject["error"];
+          alert(errorMessage);
+        });
+      } else {
+        alert("Some Server error");
+      }
     }
-    return () => { }
-  }, [])
+  };
+  // if (session.trim() !== "") {
+  //   if (phoneNumber === 0) {
+  //     const response: ResponseType = await callAPI(
+  //       'phoneNumber',
+  //     );
+  //     const { message, data, errors } = response;
+  //     if (message === "success") {
+  //       if (typeof data === "object") {
+  //         const phoneNumber = data['data'].phoneNumber
+  //         setPhoneNumber(+phoneNumber);
+  //       }
+  //     } else if (message === "failed") {
+  //       errors.map((errorObject: any) => {
+  //         const { errorMessage } = errorObject;
+  //         alert(errorMessage);
+  //       });
+  //     } else {
+  //       alert("Some Server error");
+  //     }
+  //   }
+  // }
 
-
-  const themeCallback = (value: string) => {
-    setTheme(value)
-    saveData("theme", value)
+useEffect(() => {
+  if (window.Object !== undefined) {
+    componentDidMount()
   }
+  return () => { }
+}, [])
 
-  const sessionCallback = () => {
-    sessionStorage.clear();
-    setSession("");
-    router.push("/signin")
-  }
 
-  return (
-    <AppContext.Provider value={{ session, sessionCallback: sessionCallback, theme, themeCallback: themeCallback, phoneNumber }}  >
-      {children}
-    </AppContext.Provider>
-  );
+const themeCallback = (value: string) => {
+  setTheme(value)
+  saveData("theme", value)
+}
+
+const sessionCallback = () => {
+  sessionStorage.clear();
+  setSession("");
+  router.push("/signin")
+}
+
+return (
+  <AppContext.Provider value={{ session, sessionCallback: sessionCallback, theme, themeCallback: themeCallback, phoneNumber,data }}  >
+    {children}
+  </AppContext.Provider>
+);
 }
 
 export const useWrapper = () => {
