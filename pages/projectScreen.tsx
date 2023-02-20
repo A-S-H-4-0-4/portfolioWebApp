@@ -4,7 +4,7 @@ import PS from "../styles/projectScreen.module.css";
 // react
 import React, { useEffect, useState } from "react";
 
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 // image upload
@@ -399,6 +399,8 @@ const ProjectScreen = () => {
             color={themeColor.navbackground}
             colour={themeColor.text}
             createProject={()=>{}}
+            phoneNumber={phoneNumber}
+            profile={()=>{}}
           />
           <div
             className={PS.selctType}

@@ -23,6 +23,7 @@ import { themes } from "../lib/theme";
 import ResponsiveAppBar from "../components/navbar";
 import MultiActionAreaCard from "../components/card";
 import Footer from "../components/footer";
+import Profile from "../components/profile";
 import { callAPI } from "../api/api";
 
 // image
@@ -46,12 +47,15 @@ const Home = () => {
   const [showName, setShowName] = useState(false);
   const [projects, setProjects] = useState([]);
   const { session, theme, themeCallback } = useWrapper();
+  const [phoneNumber, setPhoneNumber] = useState("")
   const [loader, setLoader] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [userName, setUserName] = useState(false);
 
-  const componentDidMount = async () => {
+  const loadProject = async () => {
     setLoader(true);
-
     const response: ResponseType = await callAPI("project");
+    setLoader(false);
 
     const { message, data, errors } = response;
     if (message === "success") {
@@ -66,8 +70,56 @@ const Home = () => {
     } else {
       alert("Some Server error");
     }
+  }
+  const loadPhoneNumber = async () => {
+    setLoader(true);
+    const response: ResponseType = await callAPI(
+      'phoneNumber',
+    );
     setLoader(false);
+    const { message, data, errors } = response;
+    if (message === "success") {
+      if (typeof data === "object") {
+        const phoneNumber = data['data'].phoneNumber
+        setPhoneNumber(phoneNumber);
+      }
+    } else if (message === "failed") {
+      errors.map((errorObject: any) => {
+        const { errorMessage } = errorObject;
+        alert(errorMessage);
+      });
+    } else {
+      alert("Some Server error");
+    }
+  }
+
+
+  const componentDidMount = async () => {
+    if (session) {
+      loadPhoneNumber();
+      loadProject();
+      setLoader(true);
+      const response: ResponseType = await callAPI(
+        'profile',
+      );
+      setLoader(false);
+      const { message, data, errors } = response;
+      if (message === "success") {
+        if (typeof data === "object") {
+          setUserName(data['data'].user['name'])
+        }
+      } else if (message === "failed") {
+        errors.map((errorObject: any) => {
+          const { errorMessage } = errorObject["error"];
+          alert(errorMessage);
+        });
+      } else {
+        alert("Some Server error");
+      }
+    }
   };
+ 
+  
   const moveToProject = (name: string) => {
     const check: any[] = projects.filter((data: any, index: number) => {
       return data["title"].toLowerCase() === name.toLowerCase();
@@ -240,6 +292,8 @@ const Home = () => {
             color={themeColor.navbackground}
             colour={themeColor.text}
             createProject={() => { setShowName(true) }}
+            phoneNumber={phoneNumber}
+            profile={() => { setShowProfile(true) }}
           />
 
           {matches == false && (
@@ -423,7 +477,7 @@ const Home = () => {
                     marginLeft: "15px",
                   }}
                 >
-                  Aayush Bhardwaj
+                  {userName}
                 </span>
               </div>
             </div>
@@ -498,6 +552,7 @@ const Home = () => {
           save={moveToProject}
         />
       )}
+      {showProfile && <Profile phoneNumber={phoneNumber} callBack={() => { setShowProfile(false) }} />}
     </React.Fragment>
   );
 };

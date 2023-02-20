@@ -36,7 +36,7 @@ import { useWrapper } from "../lib/contextApi";
 const logo = "icons/logo.png";
 
 
-const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
+const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,profile }) => {
   const router = useRouter();
   const { sessionCallback } = useWrapper();
   const [showName, setShowName] = React.useState(false);
@@ -67,7 +67,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
   
 
   React.useEffect(() => {
-    if (router.pathname === '/home'||router.pathname === '/userProfile') {
+    if (router.pathname === '/home') {
       setPathName(true)
     }
   }, []);
@@ -244,7 +244,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                  <AccountCircleIcon sx={{ fontSize: "40px" }} />
+                  <AccountCircleIcon sx={{ fontSize: "60px" }} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -264,9 +264,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem
-                  onClick={() => {
-                    router.push("/userProfile");
-                  }}
+                  onClick={profile}
                 >
                   <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
@@ -288,6 +286,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
             setShowName(false);
           }}
           colour={colour}
+          phoneNumber={phoneNumber}
         />
       )}
     </React.Fragment>
@@ -295,8 +294,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject }) => {
 };
 export default ResponsiveAppBar;
 
-const Share = ({ close, colour }) => {
-  const { phoneNumber } = useWrapper();
+const Share = ({ close, colour,phoneNumber }) => {
   return (
     <div className={PS.glass} style={{ zIndex: "100" }} >
       <div

@@ -128,6 +128,8 @@ const Home = () => {
           color={themeColor.navbackground}
           colour={themeColor.text}
           createProject={() => { }}
+          phoneNumber={phoneNumber}
+          profile={()=>{}}
         />
 
         {matches == false && (

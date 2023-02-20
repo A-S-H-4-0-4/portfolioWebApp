@@ -1,0 +1,38 @@
+.glass {
+  background: rgba(91, 112, 131, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.container {
+  height: 70%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+
+.head {
+  height: 300px;
+  width: 100%;
+  position: relative;
+}
+
+
+.profile {
+border-radius: 100px;
+position: absolute;
+top: 75%;
+left: 45%;
+display: flex;
+align-items: center;
+justify-content: center;
+}

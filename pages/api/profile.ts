@@ -33,6 +33,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             instaGram: true,
                             linkedIn: true,
                             resume: true,
+                            twitter:true,
                             description: true,
                             homePageTitle: true,
                             user: {

@@ -7,6 +7,7 @@ export const themes = {
     cardBackground: "white",
     borderColor: "black",
     iconColor: "black",
+    profileBackground: "white",
   },
   dark: {
     background: "black",
@@ -16,5 +17,6 @@ export const themes = {
     cardBackground: "black",
     borderColor: "blue",
     iconColor: "blue",
+    profileBackground: "grey"
   }
 };

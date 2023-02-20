@@ -60,7 +60,7 @@ export default function MultiActionAreaCard(cardData: CardData) {
           Details
         </Button>
         {cardData.projectUrl && <Button size="medium" color="primary" onClick={() => {
-         <Link href={cardData.projectUrl}>Home</Link>
+         <Link href={cardData.projectUrl}/>
         }} >
           open Site
         </Button>}

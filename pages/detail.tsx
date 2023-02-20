@@ -147,8 +147,9 @@ if(id){
             color={themeColor.navbackground}
             colour={themeColor.text}
             createProject={() => {
-              alert("you already on create project screen ")
             }}
+            phoneNumber={""}
+            profile={()=>{}}
           />
          
           
@@ -160,8 +161,8 @@ if(id){
                   poster={previewImage}
                   src={previewVideo}
                   fluid={false}
-                  height={"100%"}
-                  width={"100%"}
+                  height={650}
+                  width={1050}
                 >
                   <BigPlayButton position="center" />
                 </Player>
