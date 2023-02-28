@@ -54,6 +54,7 @@ import { log } from "console";
 
 // theme
 import { themes } from "../lib/theme";
+import Head from "next/head";
 
 interface ResponseType {
   message: string;
@@ -86,7 +87,7 @@ const ProjectScreen = () => {
   const [projectDescription, setProjectDescription] = useState("");
   const [projectUrl, setProjectUrl] = useState("");
   const [progress, setProgress] = useState(0)
-  const { session, theme, themeCallback } = useWrapper();
+  const { session, theme, themeCallback,data } = useWrapper();
   const [loader, setLoader] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -385,6 +386,9 @@ const ProjectScreen = () => {
   if (session) {
     return (
       <React.Fragment>
+        <Head>
+        <title>PROJECT-SCREEN</title>
+      </Head>
         <div className={PS.screen} style={{ background: "white" }}>
           <ResponsiveAppBar
             callBack={() => {
@@ -666,6 +670,7 @@ const ProjectScreen = () => {
             iconColor={themeColor.iconColor}
             borderColor={themeColor.borderColor}
             backgroundColor={themeColor.navbackground}
+            data={data}
           />
         </div>
         {showAddTech && (

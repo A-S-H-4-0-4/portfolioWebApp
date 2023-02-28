@@ -23,6 +23,7 @@ interface CardData {
   headColor: string
   update: boolean
   projectUrl: string
+  phoneNumber: string
 }
 export default function MultiActionAreaCard(cardData: CardData) {
   const date = new Date(cardData.date);
@@ -54,7 +55,7 @@ export default function MultiActionAreaCard(cardData: CardData) {
         <Button size="medium" color="primary" onClick={() => {
           router.push({
             pathname: '/detail',
-            query: { id: cardData.id }
+            query: { id: cardData.id,phoneNumber: cardData.phoneNumber}
           }, '/detail')
         }} >
           Details

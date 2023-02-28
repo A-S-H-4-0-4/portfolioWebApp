@@ -57,6 +57,7 @@ import { log } from "console";
 
 // theme
 import { themes } from "../lib/theme";
+import Head from "next/head";
 
 interface ResponseType {
   message: string;
@@ -71,31 +72,56 @@ const ProjectScreen = () => {
   const [themeColor, setThemeColor] = useState(themes.light);
   const [contentList, addContent] = useState([]);
   const [stackList, addStack] = useState([]);
-  const {  theme, themeCallback } = useWrapper();
+  const { theme, themeCallback } = useWrapper();
   const [previewImage, setPreviewImage] = useState<string>("");
   const [previewVideo, setPreviewVideo] = useState<string>("");
   const [matches, setMatches] = useState(false);
+  const [data, setData] = useState(false);
 
   const router = useRouter();
   const id = router.query.id;
+  const phoneNumber = router.query.phoneNumber;
   const componentDidMount = async () => {
-      if (id) {
-        const response: ResponseType = await callAPI(`project/${id}`);
-        const { message, data, errors } = response;
-        if (message === "success") {
-          if (typeof data === "object") {
-            filldata(data)
-          }
-        } else if (message === "failed") {
-          errors.map((errorObject: any) => {
-            const { errorMessage } = errorObject;
-            alert(errorMessage);
-          });
-        } else {
-          alert("Some Server error");
+    if (id) {
+      const response: ResponseType = await callAPI(`project/${id}`);
+      const { message, data, errors } = response;
+      if (message === "success") {
+        if (typeof data === "object") {
+          filldata(data)
         }
+      } else if (message === "failed") {
+        errors.map((errorObject: any) => {
+          const { errorMessage } = errorObject;
+          alert(errorMessage);
+        });
+      } else {
+        alert("Some Server error");
       }
+    }
+    getProfileData();
   }
+
+  const getProfileData = async () => {
+    // setLoader(true)
+    const response: ResponseType = await callAPI(
+      `profile/${phoneNumber}`,
+    );
+    // setLoader(false);
+    const { message, data, errors } = response;
+    if (message === "success") {
+      if (typeof data === "object") {
+        setData(data['data']);
+      }
+    } else if (message === "failed") {
+      errors.map((errorObject: any) => {
+        const { errorMessage } = errorObject["error"];
+        alert(errorMessage);
+      });
+    } else {
+      alert("Some Server error");
+    }
+  }
+
 
   if (typeof window !== "undefined") {
     window.matchMedia("(min-width: 1100px)").matches;
@@ -108,7 +134,7 @@ const ProjectScreen = () => {
     componentDidMount()
     // check projectName is there or not
     if (!id) {
-      router.push("/home")
+      router.back
     }
     // Check Theme on reload
     if (theme === "light") {
@@ -125,14 +151,17 @@ const ProjectScreen = () => {
 
 
   const filldata = (data: {}) => {
-      setPreviewImage(data['data'].thumbnailurl);
-      setPreviewVideo(data['data'].videoUrl);
-      addStack(data['data'].techStack)
-      addContent(data['data'].projectContent)
+    setPreviewImage(data['data'].thumbnailurl);
+    setPreviewVideo(data['data'].videoUrl);
+    addStack(data['data'].techStack)
+    addContent(data['data'].projectContent)
   }
-if(id){
+  if (id) {
     return (
       <React.Fragment>
+        <Head>
+          <title>DETAIL</title>
+        </Head>
         <div className={PS.screen} style={{ background: "white" }}>
           <ResponsiveAppBar
             callBack={() => {
@@ -148,12 +177,12 @@ if(id){
             colour={themeColor.text}
             createProject={() => {
             }}
-            phoneNumber={""}
-            profile={()=>{}}
+            phoneNumber={phoneNumber}
+            profile={() => { }}
           />
-         
-          
-          <div className={PS.head} style={{marginTop:"75px"}}>
+
+
+          <div className={PS.head} style={{ marginTop: "75px" }}>
             {previewVideo ?
               <div className={PS.video}  >
                 <Player
@@ -168,7 +197,7 @@ if(id){
                 </Player>
               </div>
               :
-              <div>            
+              <div>
               </div>
             }
             {stackList.length > 0 ? <div className={PS.bar}>
@@ -178,7 +207,7 @@ if(id){
             </div>
               :
               <div  >
-                
+
               </div>
             }
           </div>
@@ -211,7 +240,7 @@ if(id){
                         color: "black",
                       }}
                     >
-                      <h3>{object["content"]}</h3>{" "}                  
+                      <h3>{object["content"]}</h3>{" "}
                     </div>
                   );
                   break;
@@ -225,7 +254,7 @@ if(id){
                         color: "black",
                       }}
                     >
-                      <p style={{ width: "70%" }}>{object["content"]}</p>{" "}                     
+                      <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
                     </div>
                   );
                   break;
@@ -244,7 +273,7 @@ if(id){
                           text={object["content"]}
                           theme="dark"
                         />
-                      </div>{" "}                    
+                      </div>{" "}
                     </div>
                   );
 
@@ -268,12 +297,13 @@ if(id){
             iconColor={themeColor.iconColor}
             borderColor={themeColor.borderColor}
             backgroundColor={themeColor.navbackground}
+            data={data}
           />
         </div>
-        
+
       </React.Fragment>
     );
-        }
+  }
 };
 
 

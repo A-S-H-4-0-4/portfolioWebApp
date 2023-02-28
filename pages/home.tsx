@@ -444,6 +444,7 @@ const Home = () => {
                         headColor={themeColor.headColor}
                         update={true}
                         projectUrl={data["projectLink"]}
+                        phoneNumber={phoneNumber}
                       />
                     );
                   })}
@@ -582,6 +583,7 @@ const Home = () => {
             iconColor={themeColor.iconColor}
             borderColor={themeColor.borderColor}
             backgroundColor={themeColor.navbackground}
+            data={data}
           />
         </div>
       )}

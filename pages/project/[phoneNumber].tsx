@@ -54,6 +54,7 @@ const Home = () => {
   const [projects, setProjects] = useState([])
   const { theme, themeCallback } = useWrapper();
   const [loader, setLoader] = useState(false)
+  const [data, setData] = useState({})
 
   const componentDidMount = async () => {
     setLoader(true)
@@ -61,6 +62,7 @@ const Home = () => {
     const response: ResponseType = await callAPI(
       `posts/${phoneNumber}`,
     );
+    setLoader(false)
 
     const { message, data, errors } = response;
     if (message === "success") {
@@ -75,9 +77,31 @@ const Home = () => {
     } else {
       alert("Some Server error");
     }
-    setLoader(false)
+
+    getProfileData();
+
   }
 
+  const getProfileData = async () => {
+    setLoader(true)
+    const response: ResponseType = await callAPI(
+      `profile/${phoneNumber}`,
+    );
+    setLoader(false);
+    const { message, data, errors } = response;
+    if (message === "success") {
+      if (typeof data === "object") {
+        setData(data['data']);
+      }
+    } else if (message === "failed") {
+      errors.map((errorObject: any) => {
+        const { errorMessage } = errorObject["error"];
+        alert(errorMessage);
+      });
+    } else {
+      alert("Some Server error");
+    }
+  }
 
 
 
@@ -129,7 +153,7 @@ const Home = () => {
           colour={themeColor.text}
           createProject={() => { }}
           phoneNumber={phoneNumber}
-          profile={()=>{}}
+          profile={() => { }}
         />
 
         {matches == false && (
@@ -218,6 +242,7 @@ const Home = () => {
                 key={index}
                 description={data['description']} id={data['id']} title={data['title']} thumbanailUrl={data['thumbnailurl']} date={data['date']} backgroundColor={themeColor.cardBackground} textColor={themeColor.text} headColor={themeColor.headColor} update={false}
                 projectUrl={data['projectLink']}
+                phoneNumber={phoneNumber+''}
               />
             })}
 
@@ -268,6 +293,7 @@ const Home = () => {
           iconColor={themeColor.iconColor}
           borderColor={themeColor.borderColor}
           backgroundColor={themeColor.navbackground}
+          data={data}
         />
       </div>
     </React.Fragment>

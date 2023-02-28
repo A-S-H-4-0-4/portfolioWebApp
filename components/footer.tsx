@@ -25,10 +25,10 @@ const profileImage = "/images/banner.jpg"
 // context api
 import { useWrapper } from "../lib/contextApi";
 
-const Footer = ({ textColor, iconColor, borderColor, backgroundColor }) => {
+const Footer = ({ textColor, iconColor, borderColor, backgroundColor,data }) => {
 
   const [matches, setMatches] = useState(false);
-  const { data } = useWrapper();
+  
 
   if (typeof window !== "undefined") {
     window.matchMedia("(min-width: 1100px)").matches;
@@ -60,9 +60,9 @@ const Footer = ({ textColor, iconColor, borderColor, backgroundColor }) => {
       {matches == false && <div className={fotr.box} style={{ backgroundColor: backgroundColor, height: "80px", width: "100%", display: "flex", alignItems: "center", marginTop: "100px" }}>
 
         <div className={fotr.profileImg} style={{ width: "15%" }} >
-      
-          {data['userImage']!==""?<img src={data['userImage']} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover", border: "1px solid black" }} />
-          :<AccountCircleIcon sx={{ fontSize: "60px" }} /> }
+
+          {data['userImage'] !== "" ? <img src={data['userImage']} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover", border: "1px solid black" }} />
+            : <AccountCircleIcon sx={{ fontSize: "60px" }} />}
           <h3 style={{ marginLeft: "10px", alignItems: "center", color: textColor }}>{data['user'] !== undefined ? data['user'].name : <>userName</>}</h3>
         </div>
         <div className={fotr.bordr} style={{
@@ -72,48 +72,48 @@ const Footer = ({ textColor, iconColor, borderColor, backgroundColor }) => {
         }}></div>
         <Copyright sx={{ mt: 4, mb: 4, marginLeft: "20px" }} />
 
-
-        <div style={{ marginLeft: "55%", width: "8%", display: "flex", alignItems: "center", justifyContent: "space-around" }}>
-          { data['instaGram'] !=="" && <Link href={`https://www.instagram.com//${data['instaGram']}`}  >
-            <InstagramIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['twitter'] !=="" &&   <Link href={`https://www.twitter.com//${data['twitter']}`}  >
-            <TwitterIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['gitHub'] !=="" &&  <Link href={`https://www.github.com//${data['gitHub']}`}  >
-            <GitHubIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['linkedIn'] !=="" &&       <Link href={data['linkedIn']}  >
-            <LinkedInIcon sx={{ color: iconColor }} />
-          </Link>}
-        </div>
+        {data !== undefined &&
+          <div style={{ marginLeft: "55%", width: "8%", display: "flex", alignItems: "center", justifyContent: "space-around" }}>
+            {data['instaGram'] !== "" &&
+              <InstagramIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.instagram.com//${data['instaGram']}`) }} />
+            }
+            {data['twitter'] !== "" &&
+              <TwitterIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.twitter.com//${data['twitter']}`) }} />
+            }
+            {data['gitHub'] !== "" &&
+              <GitHubIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.github.com//${data['gitHub']}`) }} />
+            }
+            {data['linkedIn'] !== "" &&
+              <LinkedInIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(data['linkedIn']) }} />
+            }
+          </div>}
       </div>}
 
       {matches == true && <div className={fotr.box} style={{ backgroundColor: backgroundColor, height: "200px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
 
         <div className={fotr.profileImg}>
-          {data['userImage']!==""?<img src={data['userImage']} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover", border: "1px solid black" }} />
-          :<AccountCircleIcon sx={{ fontSize: "60px" }} /> }
+          {data['userImage'] !== "" ? <img src={data['userImage']} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover", border: "1px solid black" }} />
+            : <AccountCircleIcon sx={{ fontSize: "60px" }} />}
           <h3 style={{ marginLeft: "10px", alignItems: "center", color: textColor }}>{data['user'] !== undefined ? data['user'].name : <>userName</>}</h3>
         </div>
 
         <Copyright sx={{ mt: 2, mb: 3, marginLeft: "30px", fontWeight: "bold" }} />
 
 
-        <div style={{ width: "50%", display: "flex", alignItems: "center", marginLeft: "30px", justifyContent: "space-around", }}>
-        { data['instaGram'] !=="" && <Link href={`https://www.instagram.com//${data['instaGram']}`}  >
-            <InstagramIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['twitter'] !=="" &&   <Link href={`https://www.twitter.com//${data['twitter']}`}  >
-            <TwitterIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['gitHub'] !=="" &&  <Link href={`https://www.github.com//${data['gitHub']}`}  >
-            <GitHubIcon sx={{ color: iconColor }} />
-          </Link>}
-          { data['linkedIn'] !=="" &&       <Link href={data['linkedIn']}  >
-            <LinkedInIcon sx={{ color: iconColor }} />
-          </Link>}
-        </div>
+        {data !== undefined && <div style={{ width: "50%", display: "flex", alignItems: "center", marginLeft: "30px", justifyContent: "space-around", }}>
+          {data['instaGram'] !== "" &&
+            <InstagramIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.instagram.com//${data['instaGram']}`) }} />
+          }
+          {data['twitter'] !== "" &&
+            <TwitterIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.twitter.com//${data['twitter']}`) }} />
+          }
+          {data['gitHub'] !== "" &&
+            <GitHubIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.github.com//${data['gitHub']}`) }} />
+          }
+          {data['linkedIn'] !== "" &&
+            <LinkedInIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(data['linkedIn']) }} />
+          }
+        </div>}
       </div>}
 
     </React.Fragment>

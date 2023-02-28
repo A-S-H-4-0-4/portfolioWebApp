@@ -36,9 +36,9 @@ import { useWrapper } from "../lib/contextApi";
 const logo = "icons/logo.png";
 
 
-const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,profile }) => {
+const ResponsiveAppBar = ({ color, colour, callBack, createProject, phoneNumber, profile }) => {
   const router = useRouter();
-  const { sessionCallback,data } = useWrapper();
+  const { sessionCallback, data } = useWrapper();
   const [showName, setShowName] = React.useState(false);
   const [pathName, setPathName] = React.useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -64,7 +64,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
     setAnchorElUser(null);
   };
 
-  
+
 
   React.useEffect(() => {
     if (router.pathname === '/home') {
@@ -153,7 +153,13 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    router.push("/contact");
+                    router.push(
+                      {
+                        pathname: "/contact",
+                        query: { phoneNumber: phoneNumber },
+                      },
+                      "/contact"
+                    );
                   }}
                 >
                   <Typography textAlign="center">Contact</Typography>
@@ -207,7 +213,13 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
 
               <Button
                 onClick={() => {
-                  router.push("/contact");
+                  router.push(
+                    {
+                      pathname: "/contact",
+                      query: { phoneNumber: phoneNumber },
+                    },
+                    "/contact"
+                  );
                 }}
                 sx={{ my: 2, color: colour, display: "block" }}
               >
@@ -241,24 +253,24 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Profile"  >
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                  {data===undefined?<AccountCircleIcon sx={{ fontSize: "60px" }} />
-                :
-                <img
-                  src={data['userImage']}
-                  style={{
-                    height: "60px",
-                    width:"60px",
-                    borderRadius:"100px",
-                    margin: "0px",
-                  }}
-                  />  
-                }
+                  {data === undefined ? <AccountCircleIcon sx={{ fontSize: "60px" }} />
+                    :
+                    <img
+                      src={data['userImage']}
+                      style={{
+                        height: "60px",
+                        width: "60px",
+                        borderRadius: "100px",
+                        margin: "0px",
+                      }}
+                    />
+                  }
                 </IconButton>
               </Tooltip>
-              <Menu
+              {pathName && <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
@@ -286,7 +298,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
                 >
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
-              </Menu>
+              </Menu>}
             </Box>
           </Toolbar>
         </Container>
@@ -305,7 +317,7 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject,phoneNumber,p
 };
 export default ResponsiveAppBar;
 
-const Share = ({ close, colour,phoneNumber }) => {
+const Share = ({ close, colour, phoneNumber }) => {
   return (
     <div className={PS.glass} style={{ zIndex: "100" }} >
       <div
