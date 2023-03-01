@@ -303,7 +303,6 @@ const Contact = () => {
       {loader && <Loader3/>}
     </React.Fragment>
   )
-
 }
 
 export default Contact;
