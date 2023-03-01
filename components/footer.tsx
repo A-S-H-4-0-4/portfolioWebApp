@@ -88,9 +88,7 @@ const Footer = ({ textColor, iconColor, borderColor, backgroundColor,data }) => 
             }
           </div>}
       </div>}
-
       {matches == true && <div className={fotr.box} style={{ backgroundColor: backgroundColor, height: "200px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
-
         <div className={fotr.profileImg}>
           {data['userImage'] !== "" ? <img src={data['userImage']} style={{ height: "60px", width: "60px", borderRadius: '50%', objectFit: "cover", border: "1px solid black" }} />
             : <AccountCircleIcon sx={{ fontSize: "60px" }} />}
