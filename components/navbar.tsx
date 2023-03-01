@@ -148,7 +148,17 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject, phoneNumber,
                   <Typography textAlign="center" onClick={createProject} >Create Project</Typography>
                 </MenuItem>
                 }
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    router.push(
+                      {
+                        pathname: "/resume",
+                        query: { phoneNumber: phoneNumber },
+                      },
+                      "/resume"
+                    );
+                  }}
+                >
                   <Typography textAlign="center">Resume</Typography>
                 </MenuItem>
                 <MenuItem
@@ -207,6 +217,15 @@ const ResponsiveAppBar = ({ color, colour, callBack, createProject, phoneNumber,
               <Button
                 // onClick={() => { router.push("/home") }}
                 sx={{ my: 2, color: colour, display: "block" }}
+                onClick={() => {
+                  router.push(
+                    {
+                      pathname: "/resume",
+                      query: { phoneNumber: phoneNumber },
+                    },
+                    "/resume"
+                  );
+                }}
               >
                 Resume
               </Button>

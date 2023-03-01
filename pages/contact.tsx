@@ -49,6 +49,7 @@ const Contact = () => {
   const [matches, setMatches] = useState(false);
   const [data, setData] = useState({});
   const { theme, themeCallback } = useWrapper();
+  const [loader, setLoader] = useState(false);
 
   // router
   const router = useRouter();
@@ -70,13 +71,12 @@ const Contact = () => {
     componentDidMount();
   }, []);
 
-
   const componentDidMount = async () => {
-
-
+    setLoader(true)
     const response: ResponseType = await callAPI(
       `profile/${phoneNumber}`,
     );
+    setLoader(false)
     const { message, data, errors } = response;
     if (message === "success") {
       if (typeof data === "object") {
@@ -290,9 +290,7 @@ const Contact = () => {
             </div>
           </div>
         }
-
         <div>
-
         </div>
         <Footer
           textColor={themeColor.text}
@@ -302,6 +300,7 @@ const Contact = () => {
           data={data}
         />
       </div>
+      {loader && <Loader3/>}
     </React.Fragment>
   )
 
