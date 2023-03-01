@@ -57,8 +57,11 @@ const Resume = () => {
       setThemeColor(themes.dark);
     }
     componentDidMount();
+    if (!phoneNumber) {
+      router.back()
+      }
   }, []);
-  
+
   const componentDidMount = async () => {
     setLoader(true)
     const response: ResponseType = await callAPI(
@@ -81,9 +84,37 @@ const Resume = () => {
   };
 
   return (<React.Fragment>
+    <Head>
+      <title>RESUME</title>
+    </Head>
+    <div style={{ width: "100vw", height: "100vh", background: themeColor.background, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between" }} >
+      <ResponsiveAppBar
+        callBack={() => {
+          if (theme == "light") {
+            themeCallback("dark");
+            setThemeColor(themes.dark);
+          } else {
+            themeCallback("light");
+            setThemeColor(themes.light);
+          }
+        }}
+        color={themeColor.navbackground}
+        colour={themeColor.text}
+        createProject={""}
+        phoneNumber={phoneNumber}
+        profile={() => { }}
+      />
 
+      <Footer
+        textColor={themeColor.text}
+        iconColor={themeColor.iconColor}
+        borderColor={themeColor.borderColor}
+        backgroundColor={themeColor.navbackground}
+        data={data}
+      />
+    </div>
     {loader && <Loader3 />}
-  </React.Fragment>)
+  </React.Fragment >)
 }
 
 

@@ -69,6 +69,10 @@ const Contact = () => {
       setThemeColor(themes.dark);
     }
     componentDidMount();
+    if (!phoneNumber) {
+    router.back()
+    }
+    
   }, []);
 
   const componentDidMount = async () => {
