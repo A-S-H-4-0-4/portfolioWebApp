@@ -96,9 +96,7 @@ const Footer = ({ textColor, iconColor, borderColor, backgroundColor,data }) => 
             : <AccountCircleIcon sx={{ fontSize: "60px" }} />}
           <h3 style={{ marginLeft: "10px", alignItems: "center", color: textColor }}>{data['user'] !== undefined ? data['user'].name : <>userName</>}</h3>
         </div>
-
         <Copyright sx={{ mt: 2, mb: 3, marginLeft: "30px", fontWeight: "bold" }} />
-
         {data !== undefined && <div style={{ width: "50%", display: "flex", alignItems: "center", marginLeft: "30px", justifyContent: "space-around", }}>
           {data['instaGram'] !== "" &&
             <InstagramIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.instagram.com//${data['instaGram']}`) }} />
