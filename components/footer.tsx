@@ -99,13 +99,12 @@ const Footer = ({ textColor, iconColor, borderColor, backgroundColor,data }) => 
 
         <Copyright sx={{ mt: 2, mb: 3, marginLeft: "30px", fontWeight: "bold" }} />
 
-
         {data !== undefined && <div style={{ width: "50%", display: "flex", alignItems: "center", marginLeft: "30px", justifyContent: "space-around", }}>
           {data['instaGram'] !== "" &&
             <InstagramIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.instagram.com//${data['instaGram']}`) }} />
           }
           {data['twitter'] !== "" &&
-            <TwitterIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.twitter.com//${data['twitter']}`) }} />
+            <TwitterIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.twitter.com//${data['twitter']}`) }} /> 
           }
           {data['gitHub'] !== "" &&
             <GitHubIcon sx={{ color: iconColor, cursor: "pointer" }} onClick={() => { router.push(`https://www.github.com//${data['gitHub']}`) }} />
