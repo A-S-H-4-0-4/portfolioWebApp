@@ -23,6 +23,7 @@ import { themes } from "./../../lib/theme";
 import ResponsiveAppBar from "./../../components/navbar";
 import MultiActionAreaCard from "./../../components/card";
 import Footer from "./../../components/footer";
+import Loader from "./../../components/loader";
 import { callAPI } from "./../../api/api";
 
 
@@ -58,7 +59,6 @@ const Home = () => {
 
   const componentDidMount = async () => {
     setLoader(true)
-
     const response: ResponseType = await callAPI(
       `posts/${phoneNumber}`,
     );
@@ -77,11 +77,8 @@ const Home = () => {
     } else {
       alert("Some Server error");
     }
-
     getProfileData();
-
   }
-
   const getProfileData = async () => {
     setLoader(true)
     const response: ResponseType = await callAPI(
@@ -102,8 +99,6 @@ const Home = () => {
       alert("Some Server error");
     }
   }
-
-
 
   if (typeof window !== "undefined") {
     window.matchMedia("(min-width: 900px)").matches;
@@ -159,41 +154,30 @@ const Home = () => {
         {matches == false && (
           <div className={H.banner}>
             <div className={H.rbanner}>
-              <img src={banner2Image} style={{ height: '100%', width: "100%", margin: "0px", borderRadius: "50px" }} />
+              {data  ?
+                data['bannerImage'] && <img
+                  src={data['bannerImage']}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    margin: "0px",
+                    borderRadius: "50px",
+                  }}
+                />
+                : <img
+                  src={""}
+                  alt={"image not found"}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    margin: "0px",
+                    borderRadius: "50px",
+                  }}
+                />}
             </div>
 
             <div className={H.lbanner}>
-              <h1
-                style={{
-                  color: themeColor.headColor,
-                  width: "80%",
-                  fontFamily: "monospace",
-                  letterSpacing: ".3rem",
-                }}
-
-              >
-                {" "}
-                Welcome to my Portal!{" "}
-              </h1>
-              <p style={{ color: themeColor.text, width: "80%" }}>
-                {" "}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-                adipisci mollitia facilis reiciendis quibusdam nulla repellat,
-                consequuntur commodi maiores officiis ea ducimus quidem
-                voluptates eaque nesciunt non, magni nobis enim?
-                Reprehenderit, fugiat architecto. Assumenda veritatis ratione
-                temporibus, nostrum sunt impedit quas molestias eos
-                doloremque, dolore qui ullam? Vero illum veritatis ullam nihil
-                ?{" "}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {matches == true && (
-          <div className={H.banner}>
-            <div className={H.bannertext}>
-              <h1
+              {!data  ? <h1
                 style={{
                   color: themeColor.headColor,
                   width: "80%",
@@ -203,8 +187,18 @@ const Home = () => {
               >
                 {" "}
                 Welcome to my Portal!{" "}
-              </h1>
-              <p style={{ color: themeColor.text, width: "80%" }}>
+              </h1> : <h1
+                style={{
+                  color: themeColor.headColor,
+                  width: "80%",
+                  fontFamily: "monospace",
+                  letterSpacing: ".3rem",
+                }}
+              >
+                {" "}
+                {data['homePageTitle']}
+              </h1>}
+              {!data ? <p style={{ color: themeColor.text, width: "80%" }}>
                 {" "}
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
                 adipisci mollitia facilis reiciendis quibusdam nulla repellat,
@@ -219,7 +213,58 @@ const Home = () => {
                 Tempora itaque porro sit at placeat suscipit vero, quos
                 officiis atque ipsam vel unde rem eum modi vitae repellendus
                 id, expedita tempore?{" "}
-              </p>
+              </p> :
+                <p style={{ color: themeColor.text, width: "80%" }}>
+                  {data['description']}
+                </p>}
+            </div>
+          </div>
+        )}
+
+        {matches == true && (
+          <div className={H.banner}>
+            <div className={H.bannertext}>
+              {!data ? <h1
+                style={{
+                  color: themeColor.headColor,
+                  width: "80%",
+                  fontFamily: "monospace",
+                  letterSpacing: ".3rem",
+                }}
+              >
+                {" "}
+                Welcome to my Portal!{" "}
+              </h1> : <h1
+                style={{
+                  color: themeColor.headColor,
+                  width: "80%",
+                  fontFamily: "monospace",
+                  letterSpacing: ".3rem",
+                }}
+              >
+                {" "}
+                {data['homePageTitle']}
+              </h1>}
+              {!data? <p style={{ color: themeColor.text, width: "80%" }}>
+                {" "}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
+                adipisci mollitia facilis reiciendis quibusdam nulla repellat,
+                consequuntur commodi maiores officiis ea ducimus quidem
+                voluptates eaque nesciunt non, magni nobis enim?
+                Reprehenderit, fugiat architecto. Assumenda veritatis ratione
+                temporibus, nostrum sunt impedit quas molestias eos
+                doloremque, dolore qui ullam? Vero illum veritatis ullam nihil
+                perferendis enim assumenda, nisi dolorum. Ipsam dolores quas
+                facilis nisi ipsa pariatur, ullam modi quam iure labore,
+                ducimus non magnam enim sequi omnis obcaecati veniam tempore!
+                Tempora itaque porro sit at placeat suscipit vero, quos
+                officiis atque ipsam vel unde rem eum modi vitae repellendus
+                id, expedita tempore?{" "}
+              </p> :
+                <p style={{ color: themeColor.text, width: "80%" }}>
+                  {" "}
+                  {data && data['description']}
+                </p>}
             </div>
           </div>
         )}
@@ -242,7 +287,7 @@ const Home = () => {
                 key={index}
                 description={data['description']} id={data['id']} title={data['title']} thumbanailUrl={data['thumbnailurl']} date={data['date']} backgroundColor={themeColor.cardBackground} textColor={themeColor.text} headColor={themeColor.headColor} update={false}
                 projectUrl={data['projectLink']}
-                phoneNumber={phoneNumber+''}
+                phoneNumber={phoneNumber + ''}
               />
             })}
 
@@ -253,49 +298,122 @@ const Home = () => {
             </div>
           }
         </div>
-        {matches !== true ? <div className={H.content}>
-          <h1
-            style={{
-              color: themeColor.headColor,
-              fontFamily: "monospace",
-              letterSpacing: ".3rem",
-              fontSize: "30px",
-            }}
-          >
-            Declaration
-          </h1>
-          <div className={H.declaration} style={{ boxShadow: "1px 1px 2px 2px grey", width: "50%", borderRadius: "5px", display: "flex", justifyContent: "space-evenly", flexDirection: "column" }} >
-            <p style={{ color: themeColor.text, fontWeight: "bold", width: "90%", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "50px", marginLeft: "15px" }} > I do hereby state that all the details mentioned above are accurate to the best of my familiarity and confidence. I bear the accountability for any blunder or mistake in the future.  </p>
-            <span
-              style={{ color: themeColor.text, fontWeight: "bold", marginTop: "40px", marginBottom: "20px", marginLeft: "15px" }}
-            >Aayush Bhardwaj</span>
+        {matches !== true ? (
+          <div className={H.content}>
+            <h1
+              style={{
+                color: themeColor.headColor,
+                fontFamily: "monospace",
+                letterSpacing: ".3rem",
+                fontSize: "30px",
+              }}
+            >
+              Declaration
+            </h1>
+            <div
+              className={H.declaration}
+              style={{
+                boxShadow: "1px 1px 2px 2px grey",
+                width: "50%",
+                borderRadius: "5px",
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexDirection: "column",
+              }}
+            >
+              <p
+                style={{
+                  color: themeColor.text,
+                  fontWeight: "bold",
+                  width: "90%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "50px",
+                  marginLeft: "15px",
+                }}
+              >
+                {" "}
+                I do hereby state that all the details mentioned above are
+                accurate to the best of my familiarity and confidence. I bear
+                the accountability for any blunder or mistake in the future.{" "}
+              </p>
+              <span
+                style={{
+                  color: themeColor.text,
+                  fontWeight: "bold",
+                  marginTop: "40px",
+                  marginBottom: "20px",
+                  marginLeft: "15px",
+                }}
+              >
+                {data && data['user'] !== undefined ? data['user'].name : <>userName</>}
+              </span>
+            </div>
           </div>
-        </div> : <div className={H.content}>
-          <h1
-            style={{
-              color: themeColor.headColor,
-              fontFamily: "monospace",
-              letterSpacing: ".3rem",
-              fontSize: "30px",
-            }}
-          >
-            Declaration
-          </h1>
-          <div className={H.declaration} style={{ boxShadow: "1px 1px 2px 2px grey", width: "80%", borderRadius: "5px", display: "flex", justifyContent: "space-evenly", flexDirection: "column" }} >
-            <p style={{ color: themeColor.text, fontWeight: "bold", width: "90%", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "50px", marginLeft: "15px" }} > I do hereby state that all the details mentioned above are accurate to the best of my familiarity and confidence. I bear the accountability for any blunder or mistake in the future.  </p>
-            <span
-              style={{ color: themeColor.text, fontWeight: "bold", marginTop: "40px", marginBottom: "20px", marginLeft: "15px" }}
-            >Aayush Bhardwaj</span>
+        ) : (
+          <div className={H.content}>
+            <h1
+              style={{
+                color: themeColor.headColor,
+                fontFamily: "monospace",
+                letterSpacing: ".3rem",
+                fontSize: "30px",
+              }}
+            >
+              Declaration
+            </h1>
+            <div
+              className={H.declaration}
+              style={{
+                boxShadow: "1px 1px 2px 2px grey",
+                width: "80%",
+                borderRadius: "5px",
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexDirection: "column",
+              }}
+            >
+              <p
+                style={{
+                  color: themeColor.text,
+                  fontWeight: "bold",
+                  width: "90%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "50px",
+                  marginLeft: "15px",
+                }}
+              >
+                {" "}
+                I do hereby state that all the details mentioned above are
+                accurate to the best of my familiarity and confidence. I bear
+                the accountability for any blunder or mistake in the future.{" "}
+              </p>
+              <span
+                style={{
+                  color: themeColor.text,
+                  fontWeight: "bold",
+                  marginTop: "40px",
+                  marginBottom: "20px",
+                  marginLeft: "15px",
+                }}
+              >
+                {data !== undefined && data['user'].name}
+              </span>
+            </div>
           </div>
-        </div>}
-        <Footer
+        )}
+       {data && <Footer
           textColor={themeColor.text}
           iconColor={themeColor.iconColor}
           borderColor={themeColor.borderColor}
           backgroundColor={themeColor.navbackground}
           data={data}
-        />
+        />}
       </div>
+      {loader && <Loader/> }
     </React.Fragment>
   );
 };

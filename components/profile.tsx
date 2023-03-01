@@ -83,7 +83,6 @@ const Profile = ({ phoneNumber, callBack }) => {
     linkedIn: "",
     twitter: "",
   });
-
   const componentDidMount = async () => {
     setLoader(true);
     const response: ResponseType = await callAPI(
@@ -103,11 +102,7 @@ const Profile = ({ phoneNumber, callBack }) => {
     } else {
       alert("Some Server error");
     }
-
-
   }
-
-
   useEffect(() => {
     componentDidMount();
 

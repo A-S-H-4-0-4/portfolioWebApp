@@ -1,31 +1,23 @@
 .navbar{
   height: 70px;
   width: 90%;
-  /* position: fixed; */
-  bottom: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: white; 
-  border-radius: 30px;
+  border-radius: 5px;
   box-shadow: 0 3px 5px 0 rgb(187, 186, 186);
  margin-top: 20px;
+ 
 }
 .navbar div{
   height: 100%;
-  width: 15%;
+  width: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(5, 5, 5);
   font-size: 20px;
   font-weight:bold;
-  cursor: pointer;
-  border-radius: 50px;
   font-family: "monospace";
-  /* letter-spacing: '.4rem'; */
+  letter-spacing: ".3rem";
+  /* border: 1px solid #ccc; */
 }
-/* .navbar div:hover{
-  background: rgb(67, 67, 67);
-  color: rgb(0, 0, 0);
-} */

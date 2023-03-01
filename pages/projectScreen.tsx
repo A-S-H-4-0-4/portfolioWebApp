@@ -49,8 +49,6 @@ import Button from "@mui/material/Button";
 
 // Importing callApi
 import { callAPI, methods } from "../api/api";
-import { getData } from "../local/storage";
-import { log } from "console";
 
 // theme
 import { themes } from "../lib/theme";
@@ -199,7 +197,7 @@ const ProjectScreen = () => {
       if (types.indexOf(files[0].type) >= 0) {
         filename === "video" ? setVideoFile(files[0]) :
           setImageFile(files[0]);
-        console.log(files[0]);
+        // console.log(files[0]);
       }
       else {
         alert("File can be of these types only " + types)
@@ -223,6 +221,7 @@ const ProjectScreen = () => {
     }
   }
 
+// console.log(stackList);
 
   const handleUploadFile = (path: string, file: File) => {
     return () => {
@@ -269,11 +268,9 @@ const ProjectScreen = () => {
   };
 
   const deleteStack = (index:number)=>{
-    return ()=>{
       let newList = [...stackList];
       newList.splice(index,1)
       addStack(newList)
-    }
   }
   const handleStack = (type: string, content: string, index: number,saveMore=false) => {
     let newList = [...stackList];
@@ -334,7 +331,7 @@ const ProjectScreen = () => {
     };
 
     if (id) {
-      console.log(params);
+      // console.log(params);
 
       setLoader(true);
       const response: ResponseType = await callAPI(
@@ -538,8 +535,8 @@ const ProjectScreen = () => {
               </div>
             }
             {stackList.length > 0 ? <div className={PS.bar}>
-              {stackList.map(({ type, content }) => {
-                return <Bar text={content} type={type} />;
+              {stackList.map(({ type, content,index }) => {
+                return <Bar text={content} type={type} callBack={()=>{deleteStack(index)}} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
               })}
             </div>
               :

@@ -1,23 +1,15 @@
 
 
-// styles
-import D from "../styles/detail.module.css";
 import PS from "../styles/projectScreen.module.css";
 
 // react
 import React, { useEffect, useState } from "react";
 
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
-
-
-// image upload
-import { ImageUpload } from "../lib/fileUpload";
 
 // components
 import ResponsiveAppBar from "../components/navbar";
 import Footer from "../components/footer";
 import Bar from "../components/bar";
-import Loader from "../components/loader";
 
 
 
@@ -27,17 +19,6 @@ import { useRouter } from "next/router";
 // code snippet
 import CodeBlockDefaultExample from "../components/codeBlock";
 
-// mui icons
-import VideoCallIcon from "@mui/icons-material/VideoCall";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import AddCardIcon from "@mui/icons-material/AddCard";
-import EditIcon from "@mui/icons-material/Edit";
-import DescriptionIcon from "@mui/icons-material/Description";
-import PreviewIcon from '@mui/icons-material/Preview';
-import HttpIcon from '@mui/icons-material/Http';
-// storage
-import { storage } from "../firebaseConfig";
 
 // context
 import { useWrapper } from "../lib/contextApi";
@@ -46,14 +27,10 @@ import { useWrapper } from "../lib/contextApi";
 import "node_modules/video-react/dist/video-react.css";
 import { BigPlayButton, Player } from "video-react";
 
-// muit tooltip
-import Tooltip from "@mui/material/Tooltip";
-import Button from "@mui/material/Button";
+
 
 // Importing callApi
 import { callAPI, methods } from "../api/api";
-import { getData } from "../local/storage";
-import { log } from "console";
 
 // theme
 import { themes } from "../lib/theme";
@@ -202,7 +179,7 @@ const ProjectScreen = () => {
             }
             {stackList.length > 0 ? <div className={PS.bar}>
               {stackList.map(({ type, content }) => {
-                return <Bar text={content} type={type} />;
+                return <Bar text={content} type={type} callBack={()=>{}} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
               })}
             </div>
               :

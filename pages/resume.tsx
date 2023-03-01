@@ -59,7 +59,7 @@ const Resume = () => {
     componentDidMount();
     if (!phoneNumber) {
       router.back()
-      }
+    }
   }, []);
 
   const componentDidMount = async () => {
@@ -105,13 +105,19 @@ const Resume = () => {
         profile={() => { }}
       />
 
-      <Footer
+      {data ? <iframe src={data['resume']} height="100%" width="100%" style={{ border: "none", marginTop: "73px" }} /> :
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <h2>Please attach your resume first<a style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }} onClick={() => { router.push("/home") }} > Go to Home</a> </h2>
+        </div>
+      }
+
+      {/* <Footer
         textColor={themeColor.text}
         iconColor={themeColor.iconColor}
         borderColor={themeColor.borderColor}
         backgroundColor={themeColor.navbackground}
         data={data}
-      />
+      /> */}
     </div>
     {loader && <Loader3 />}
   </React.Fragment >)
