@@ -17,6 +17,7 @@
     "axios": "^1.2.3",
     "bcrypt": "^5.1.0",
     "compressorjs": "^1.1.1",
+    "connect": "^3.7.0",
     "firebase": "^9.16.0",
     "firebase-tools": "^11.22.0",
     "formidable": "^2.1.1",
@@ -33,6 +34,7 @@
     "video-react": "^0.16.0"
   },
   "devDependencies": {
+    "@types/connect": "^3.4.35",
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",
     "@types/react-copy-to-clipboard": "^5.0.4",

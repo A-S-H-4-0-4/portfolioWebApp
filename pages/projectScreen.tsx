@@ -110,10 +110,7 @@ const ProjectScreen = () => {
           setPhoneNumber(phoneNumber);
         }
       } else if (message === "failed") {
-        errors.map((errorObject: any) => {
-          const { errorMessage } = errorObject;
-          alert(errorMessage);
-        });
+  
       } else {
         alert("Some Server error");
       }
@@ -126,10 +123,7 @@ const ProjectScreen = () => {
             filldata(data)
           }
         } else if (message === "failed") {
-          errors.map((errorObject: any) => {
-            const { errorMessage } = errorObject;
-            alert(errorMessage);
-          });
+      
         } else {
           alert("Some Server error");
         }
@@ -305,10 +299,7 @@ const ProjectScreen = () => {
           router.push("/home")
         }
       } else if (message === "failed") {
-        errors.map((errorObject) => {
-          const { errorMessage } = errorObject["error"];
-          alert(errorMessage);
-        });
+
       } else {
         alert("Some Server error");
       }
@@ -349,10 +340,7 @@ const ProjectScreen = () => {
           router.push("/home")
         }
       } else if (message === "failed") {
-        errors.map((errorObject) => {
-          const { errorMessage } = errorObject["error"];
-          alert(errorMessage);
-        });
+
       } else {
         alert("Some Server error");
       }
@@ -371,10 +359,6 @@ const ProjectScreen = () => {
           router.push("/home")
         }
       } else if (message === "failed") {
-        errors.map((errorObject) => {
-          const { errorMessage } = errorObject["error"];
-          alert(errorMessage);
-        });
       } else {
         alert("Some Server error");
       }
@@ -640,7 +624,7 @@ const ProjectScreen = () => {
               }
               {stackList.length > 0 ? <div className={PS.bar}>
                 {stackList.map(({ type, content, index }) => {
-                  return <Bar text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
+                  return <Bar key={index} text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
                 })}
               </div>
                 :
@@ -926,7 +910,7 @@ const ProjectScreen = () => {
               :
               stackList.length > 0 ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                 {stackList.map(({ type, content, index }) => {
-                  return <Bar text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
+                  return <Bar key = {index} text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
                 })}
               </div>
                 :

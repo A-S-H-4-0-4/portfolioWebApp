@@ -126,9 +126,7 @@ export default function SignIn() {
         // "Error!!","Error in login please try again ):")
       }
     } else if (message === "failed") {
-      errors.map((errorObject) => {
-        return (<AlertDialog heading="Error!!" text={errorObject["error"]} />)
-      });
+        return (<AlertDialog heading="Error!!" text={errors} />)
     } else {
       return (<AlertDialog heading="Error!!" text="There in error in server please try again later ):" />)
     }

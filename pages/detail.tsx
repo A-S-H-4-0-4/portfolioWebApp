@@ -67,10 +67,7 @@ const ProjectScreen = () => {
           filldata(data)
         }
       } else if (message === "failed") {
-        errors.map((errorObject: any) => {
-          const { errorMessage } = errorObject;
-          alert(errorMessage);
-        });
+       
       } else {
         alert("Some Server error");
       }
@@ -90,10 +87,7 @@ const ProjectScreen = () => {
         setData(data['data']);
       }
     } else if (message === "failed") {
-      errors.map((errorObject: any) => {
-        const { errorMessage } = errorObject["error"];
-        alert(errorMessage);
-      });
+      
     } else {
       alert("Some Server error");
     }
@@ -177,7 +171,7 @@ const ProjectScreen = () => {
               }
               {stackList.length > 0 && <div className={PS.bar}>
                 {stackList.map(({ type, content, index }) => {
-                  return <Bar text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
+                  return <Bar key ={index} text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
                 })}
               </div>
               }
@@ -374,7 +368,7 @@ const ProjectScreen = () => {
               :
               stackList.length > 0 && <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                 {stackList.map(({ type, content, index }) => {
-                  return <Bar text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
+                  return <Bar key={index} text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
                 })}
               </div>
 
