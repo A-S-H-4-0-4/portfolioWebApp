@@ -400,7 +400,7 @@ const Home = () => {
                   marginLeft: "15px",
                 }}
               >
-                {data !== undefined && data['user'].name}
+              {data && data['user'] !== undefined ? data['user'].name : <>userName</>}
               </span>
             </div>
           </div>
