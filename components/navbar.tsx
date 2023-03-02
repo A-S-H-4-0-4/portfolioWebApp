@@ -398,7 +398,7 @@ const Share = ({ close, colour, phoneNumber }) => {
         <Box sx={{ with: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-around" }} >
 
           <TwitterShareButton
-            url={`http://localhost:3000/project/${phoneNumber}`}
+            url={`https://portfolio-one-psi-84.vercel.app/project/${phoneNumber}`}
             title={
               "This is my portfolio. go check it out :)."
             }
@@ -407,13 +407,13 @@ const Share = ({ close, colour, phoneNumber }) => {
           </TwitterShareButton>
 
 
-          <LinkedinShareButton url={`http://localhost:3000/project/${phoneNumber}`}>
+          <LinkedinShareButton url={`https://portfolio-one-psi-84.vercel.app/project/${phoneNumber}`}>
             <LinkedinIcon size={36} round className={PS.icon} />
           </LinkedinShareButton>
 
 
           <FacebookShareButton
-            url={`http://localhost:3000/project/${phoneNumber}`}
+            url={`https://portfolio-one-psi-84.vercel.app/project/${phoneNumber}`}
             quote={
               "This is my portfolio. go check it out :)."
             }
@@ -423,7 +423,7 @@ const Share = ({ close, colour, phoneNumber }) => {
           </FacebookShareButton>
 
           <WhatsappShareButton
-            url={`http://localhost:3000/project/${phoneNumber}`}
+            url={`https://portfolio-one-psi-84.vercel.app/project/${phoneNumber}`}
             title={
               "This is my portfolio. go check it out :)."
             }

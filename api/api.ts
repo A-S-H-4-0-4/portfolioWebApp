@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 // import App from "next/app";
 
-const BaseUrl: string = "http://localhost:3000/api/";
+const BaseUrl: string = "https://portfolio-one-psi-84.vercel.app/api/";
 
 // session
 import { getData } from "../local/storage";
