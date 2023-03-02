@@ -49,6 +49,7 @@ const Home = () => {
   const router = useRouter();
 
   const phoneNumber = router.query.phoneNumber
+  console.log(phoneNumber);
 
   const [themeColor, setThemeColor] = useState(themes.light);
   const [matches, setMatches] = useState(false);
@@ -58,26 +59,28 @@ const Home = () => {
   const [data, setData] = useState({})
 
   const componentDidMount = async () => {
-    setLoader(true)
-    const response: ResponseType = await callAPI(
-      `posts/${phoneNumber}`,
-    );
-    setLoader(false)
+    if (phoneNumber) {
+      setLoader(true)
+      const response: ResponseType = await callAPI(
+        `posts/${phoneNumber}`,
+      );
+      setLoader(false)
 
-    const { message, data, errors } = response;
-    if (message === "success") {
-      if (typeof data === "object") {
-        setProjects(data['data'])
+      const { message, data, errors } = response;
+      if (message === "success") {
+        if (typeof data === "object") {
+          setProjects(data['data'])
+        }
+      } else if (message === "failure") {
+        errors.map((errorObject: any) => {
+          const { errorMessage } = errorObject;
+          alert(errorMessage);
+        });
+      } else {
+        alert("Some Server error");
       }
-    } else if (message === "failure") {
-      errors.map((errorObject: any) => {
-        const { errorMessage } = errorObject;
-        alert(errorMessage);
-      });
-    } else {
-      alert("Some Server error");
+      getProfileData();
     }
-    getProfileData();
   }
   const getProfileData = async () => {
     setLoader(true)
@@ -154,7 +157,7 @@ const Home = () => {
         {matches == false && (
           <div className={H.banner}>
             <div className={H.rbanner}>
-              {data  ?
+              {data ?
                 data['bannerImage'] && <img
                   src={data['bannerImage']}
                   style={{
@@ -177,7 +180,7 @@ const Home = () => {
             </div>
 
             <div className={H.lbanner}>
-              {!data  ? <h1
+              {!data ? <h1
                 style={{
                   color: themeColor.headColor,
                   width: "80%",
@@ -245,7 +248,7 @@ const Home = () => {
                 {" "}
                 {data['homePageTitle']}
               </h1>}
-              {!data? <p style={{ color: themeColor.text, width: "80%" }}>
+              {!data ? <p style={{ color: themeColor.text, width: "80%" }}>
                 {" "}
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
                 adipisci mollitia facilis reiciendis quibusdam nulla repellat,
@@ -400,12 +403,12 @@ const Home = () => {
                   marginLeft: "15px",
                 }}
               >
-              {data && data['user'] !== undefined ? data['user'].name : <>userName</>}
+                {data && data['user'] !== undefined ? data['user'].name : <>userName</>}
               </span>
             </div>
           </div>
         )}
-       {data && <Footer
+        {data && <Footer
           textColor={themeColor.text}
           iconColor={themeColor.iconColor}
           borderColor={themeColor.borderColor}
@@ -413,7 +416,7 @@ const Home = () => {
           data={data}
         />}
       </div>
-      {loader && <Loader/> }
+      {loader && <Loader />}
     </React.Fragment>
   );
 };
