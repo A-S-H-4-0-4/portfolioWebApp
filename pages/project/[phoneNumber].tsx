@@ -1,5 +1,5 @@
 // style
-import H from "./../../styles/home.module.css";
+import H from "./../../styles/Home.module.css";
 
 // styles
 import PS from "./../../styles/projectScreen.module.css";
