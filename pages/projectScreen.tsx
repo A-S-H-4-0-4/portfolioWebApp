@@ -85,13 +85,14 @@ const ProjectScreen = () => {
   const [projectDescription, setProjectDescription] = useState("");
   const [projectUrl, setProjectUrl] = useState("");
   const [progress, setProgress] = useState(0)
-  const { session, theme, themeCallback,data } = useWrapper();
+  const { session, theme, themeCallback, data } = useWrapper();
   const [loader, setLoader] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [previewImage, setPreviewImage] = useState<string>("");
   const [previewVideo, setPreviewVideo] = useState<string>("");
   const [previewCard, setPreviewCard] = useState<boolean>(false);
   const [matches, setMatches] = useState(false);
+  const [type, setType] = useState<string>("content");
 
   const router = useRouter();
   const name = router.query.name;
@@ -221,7 +222,7 @@ const ProjectScreen = () => {
     }
   }
 
-// console.log(stackList);
+  // console.log(stackList);
 
   const handleUploadFile = (path: string, file: File) => {
     return () => {
@@ -253,7 +254,7 @@ const ProjectScreen = () => {
     }
   };
 
-  const handleContent = (type: string, content: string, language: string,saveMore:boolean=false) => {
+  const handleContent = (type: string, content: string, language: string, saveMore: boolean = false) => {
     let newList = [...contentList];
     if (cIndex === -1) {
       newList.push({ type: type, content: content, language: language });
@@ -261,18 +262,18 @@ const ProjectScreen = () => {
       newList[cIndex] = { type: type, content: content, language: language };
     }
     addContent(newList);
-    !saveMore&&setShowAddContent(false);
+    !saveMore && setShowAddContent(false);
     changeCindex(-1);
     changeCType("heading");
     changeText("");
   };
 
-  const deleteStack = (index:number)=>{
-      let newList = [...stackList];
-      newList.splice(index,1)
-      addStack(newList)
+  const deleteStack = (index: number) => {
+    let newList = [...stackList];
+    newList.splice(index, 1)
+    addStack(newList)
   }
-  const handleStack = (type: string, content: string, index: number,saveMore=false) => {
+  const handleStack = (type: string, content: string, index: number, saveMore = false) => {
     let newList = [...stackList];
     if (index === -1) {
       newList.push({ type: type, content: content });
@@ -384,9 +385,9 @@ const ProjectScreen = () => {
     return (
       <React.Fragment>
         <Head>
-        <title>PROJECT-SCREEN</title>
-      </Head>
-        <div className={PS.screen} style={{ background: "white" }}>
+          <title>PROJECT-SCREEN</title>
+        </Head>
+        <div className={PS.screen} style={{ background: themeColor.background }}>
           <ResponsiveAppBar
             callBack={() => {
               if (theme == "light") {
@@ -399,13 +400,13 @@ const ProjectScreen = () => {
             }}
             color={themeColor.navbackground}
             colour={themeColor.text}
-            createProject={()=>{}}
+            createProject={() => { }}
             phoneNumber={phoneNumber}
-            profile={()=>{}}
+            profile={() => { }}
           />
-          <div
+          {matches === false ? <div
             className={PS.selctType}
-            style={{ background: "rgb(20, 21, 21)", marginTop: "70px" }}
+            style={{ background: themeColor.navbackground, marginTop: "70px", borderBottom: "1px solid #ccc" }}
           >
             <div style={{ width: "35%" }}>
               <Tooltip
@@ -415,7 +416,7 @@ const ProjectScreen = () => {
                   setShowDescription(true);
                 }}
               >
-                <DescriptionIcon />
+                <DescriptionIcon sx={{ color: themeColor.text }} />
               </Tooltip>
               <Tooltip
                 title="Add Project Link"
@@ -424,7 +425,7 @@ const ProjectScreen = () => {
                   setAddUrl(true);
                 }}
               >
-                <HttpIcon />
+                <HttpIcon sx={{ color: themeColor.text }} />
               </Tooltip>
 
               <Tooltip
@@ -434,7 +435,7 @@ const ProjectScreen = () => {
                   setShowAddTech(true);
                 }}
               >
-                <AddCardIcon />
+                <AddCardIcon sx={{ color: themeColor.text }} />
               </Tooltip>
               <Tooltip
                 title="Add Content"
@@ -443,7 +444,7 @@ const ProjectScreen = () => {
                   setShowAddContent(true);
                 }}
               >
-                <PostAddIcon />
+                <PostAddIcon sx={{ color: themeColor.text }} />
               </Tooltip>
               {previewImage ? <Tooltip
                 title="Preview Image"
@@ -452,14 +453,14 @@ const ProjectScreen = () => {
                   setPreviewCard(true);
                 }}
               >
-                <PreviewIcon sx={{ color: "white", cursor: "pointer" }} />
+                <PreviewIcon sx={{ color: themeColor.text, cursor: "pointer" }} />
               </Tooltip>
                 : <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
                   <Tooltip
                     title="Add Thumbnail Image"
-                    sx={{ cursor: "pointer", color: "white" }}
+                    sx={{ cursor: "pointer", color: themeColor.text }}
                   >
-                    <AddPhotoAlternateIcon sx={{ color: "white" }} />
+                    <AddPhotoAlternateIcon sx={{ color: themeColor.text }} />
                   </Tooltip>
                 </label>
               }
@@ -473,7 +474,7 @@ const ProjectScreen = () => {
                   title="Add Video"
                   sx={{ cursor: "pointer", color: "white" }}
                 >
-                  <VideoCallIcon sx={{ color: "white" }} />
+                  <VideoCallIcon sx={{ color: themeColor.text }} />
                 </Tooltip>
               </label>
               <input
@@ -502,164 +503,436 @@ const ProjectScreen = () => {
               </div>
             }
           </div>
-          {progress > 0 && <LinearProgress sx={{ height: "5px" }} variant="determinate" value={progress} />}
-          <div className={PS.head}>
-            {previewVideo ?
-              <div className={PS.video}  >
-                <Player
-                  playsInline
-                  poster={previewImage}
-                  src={previewVideo}
-                  fluid={false}
-                  height={650}
-                  width={1050}
-                >
-                  <BigPlayButton position="center" />
-                </Player>
-                <Button
-                  onClick={handleUploadFile('projectVideo', videoFile)}
-                  variant="contained"
-                  sx={{
-                    mx: 2, position: "absolute", top: "90%",
-                    right: "0px",
+            :
+            <div
+              className={PS.selctType}
+              style={{ background: themeColor.navbackground, marginTop: "60px", borderBottom: "1px solid #ccc" }}
+            >
+              <div style={{ width: "70%" }}>
+                <Tooltip
+                  title="Add Project Description"
+                  sx={{ cursor: "pointer", color: "white" }}
+                  onClick={() => {
+                    setShowDescription(true);
                   }}
                 >
-                  upload
+                  <DescriptionIcon sx={{ color: themeColor.text }} />
+                </Tooltip>
+                <Tooltip
+                  title="Add Project Link"
+                  sx={{ cursor: "pointer", color: "white" }}
+                  onClick={() => {
+                    setAddUrl(true);
+                  }}
+                >
+                  <HttpIcon sx={{ color: themeColor.text }} />
+                </Tooltip>
+
+                <Tooltip
+                  title="Add TechStack"
+                  sx={{ cursor: "pointer", color: "white" }}
+                  onClick={() => {
+                    setShowAddTech(true);
+                  }}
+                >
+                  <AddCardIcon sx={{ color: themeColor.text }} />
+                </Tooltip>
+                <Tooltip
+                  title="Add Content"
+                  sx={{ cursor: "pointer", color: "white" }}
+                  onClick={() => {
+                    setShowAddContent(true);
+                  }}
+                >
+                  <PostAddIcon sx={{ color: themeColor.text }} />
+                </Tooltip>
+                {previewImage ? <Tooltip
+                  title="Preview Image"
+                  sx={{ cursor: "pointer", color: "white" }}
+                  onClick={() => {
+                    setPreviewCard(true);
+                  }}
+                >
+                  <PreviewIcon sx={{ color: themeColor.text, cursor: "pointer" }} />
+                </Tooltip>
+                  : <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+                    <Tooltip
+                      title="Add Thumbnail Image"
+                      sx={{ cursor: "pointer", color: themeColor.text }}
+                    >
+                      <AddPhotoAlternateIcon sx={{ color: themeColor.text }} />
+                    </Tooltip>
+                  </label>
+                }
+                {/*  */}
+
+                <input type="file" id="imageUpload" name="image"
+                  onChange={handleSelectedFile} hidden></input>
+
+                <label htmlFor="videoUpload" style={{ cursor: "pointer" }}>
+                  <Tooltip
+                    title="Add Video"
+                    sx={{ cursor: "pointer", color: "white" }}
+                  >
+                    <VideoCallIcon sx={{ color: themeColor.text }} />
+                  </Tooltip>
+                </label>
+                <input
+                  type="file"
+                  id="videoUpload"
+                  name="video"
+                  onChange={handleSelectedFile}
+                  hidden
+                ></input>
+              </div>
+              {id ? <div style={{ width: "20%" }}>
+                <Button onClick={handleSave} variant="contained" sx={{ mx: 2 }}>
+                  Update
+                </Button>
+                <Button onClick={handledelete} variant="contained" sx={{ mx: 2 }}>
+                  delete
                 </Button>
               </div>
-              :
-              <div className={PS.video} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground }} >
-                <label htmlFor="videoUpload" style={{ cursor: "pointer" }}  >
-                  <h3 style={{ color: themeColor.text }} >ADD VIDEO +</h3>
-                </label>
-              </div>
-            }
-            {stackList.length > 0 ? <div className={PS.bar}>
-              {stackList.map(({ type, content,index }) => {
-                return <Bar text={content} type={type} callBack={()=>{deleteStack(index)}} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
-              })}
-            </div>
-              :
-              <div className={PS.bar} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => { setShowAddTech(true) }} >
-                <h3 style={{ color: themeColor.text }} >ADD TECHSTACK +</h3>
-              </div>
-            }
-          </div>
+                :
+                <div style={{ width: "20%" }}>
 
-          {contentList.length > 0 ? <div className={PS.content}>
-            {contentList.map((object: any, index: number) => {
-              let renderContent = <div style={{ color: "black" }}></div>;
-              switch (object["type"]) {
-                case "heading":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <h1>{object["content"]}</h1>{" "}
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          changeCindex(index);
-                          setShowAddContent(true);
-                          changeCType(object["type"]);
-                          changeText(object["content"]);
-                        }}
-                      />
-                    </div>
-                  );
-                  break;
-                case "subHeading":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <h3>{object["content"]}</h3>{" "}
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setShowAddContent(true);
-                          changeCType(object["type"]);
-                          changeCindex(index);
-                          changeText(object["content"]);
-                        }}
-                      />
-                    </div>
-                  );
-                  break;
-                case "text":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setShowAddContent(true);
-                          changeCType(object["type"]);
-                          changeCindex(index);
-                          changeText(object["content"]);
-                        }}
-                      />
-                    </div>
-                  );
-                  break;
-                case "code":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <div style={{ width: "60%" }}>
-                        <CodeBlockDefaultExample
-                          language={object["language"]}
-                          text={object["content"]}
-                          theme="dark"
-                        />
-                      </div>{" "}
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setShowAddContent(true);
-                          changeCType(object["type"]);
-                          changeCindex(index);
-                          changeText(object["content"]);
-                        }}
-                      />
-                    </div>
-                  );
 
-                  break;
-
-                default:
-                  break;
+                  <Button onClick={handleSave} variant="contained" sx={{ mx: 2 }}>
+                    Save
+                  </Button>
+                </div>
               }
-
-              return renderContent;
-            })}
-          </div>
-            :
-            <div className={PS.content} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => { setShowAddContent(true) }} >
-              <h3 style={{ color: themeColor.text }} >ADD Content +</h3>
             </div>
+
+          }
+          {progress > 0 && <LinearProgress sx={{ height: "5px" }} variant="determinate" value={progress} />}
+          {matches === false ?
+            <div className={PS.head}>
+              {previewVideo ?
+                <div className={PS.video}  >
+                  <Player
+                    playsInline
+                    poster={previewImage}
+                    src={previewVideo}
+                    fluid={false}
+                    height={650}
+                    width={1050}
+                  >
+                    <BigPlayButton position="center" />
+                  </Player>
+                  <Button
+                    onClick={handleUploadFile('projectVideo', videoFile)}
+                    variant="contained"
+                    sx={{
+                      mx: 2, position: "absolute", top: "90%",
+                      right: "0px",
+                    }}
+                  >
+                    upload
+                  </Button>
+                </div>
+                :
+                <div className={PS.video} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground }} >
+                  <label htmlFor="videoUpload" style={{ cursor: "pointer" }}  >
+                    <h3 style={{ color: themeColor.text }} >ADD VIDEO +</h3>
+                  </label>
+                </div>
+              }
+              {stackList.length > 0 ? <div className={PS.bar}>
+                {stackList.map(({ type, content, index }) => {
+                  return <Bar text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
+                })}
+              </div>
+                :
+                <div className={PS.bar} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => { setShowAddTech(true) }} >
+                  <h3 style={{ color: themeColor.text }} >ADD TECHSTACK +</h3>
+                </div>
+              }
+            </div>
+            :
+            <div >
+              {previewVideo ?
+                <div className={PS.mvideo}  >
+                  <Player
+                    playsInline
+                    poster={previewImage}
+                    src={previewVideo}
+                    fluid={false}
+                    height={250}
+                    width={1000}
+                  >
+                    <BigPlayButton position="center" />
+                  </Player>
+                  <Button
+                    onClick={handleUploadFile('projectVideo', videoFile)}
+                    variant="contained"
+                    sx={{
+                      mx: 2, position: "absolute", top: "65%",
+                      right: "0px",
+                    }}
+                  >
+                    upload
+                  </Button>
+                </div>
+                :
+                <div className={PS.video} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground }} >
+                  <label htmlFor="videoUpload" style={{ cursor: "pointer" }}  >
+                    <h3 style={{ color: themeColor.text }} >ADD VIDEO +</h3>
+                  </label>
+                </div>
+              }
+            </div>
+          }
+          {matches === true && 
+          <div style={{ width: "96%", marginLeft: "2%", display: "flex", alignItems: "center", justifyContent: "space-evenly" }} > 
+          {type === "content" ? <span style={{ cursor: "pointer", color: "#1976d2", fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("content") }} >Content</span> : <span style={{ cursor: "pointer", color: themeColor.text, fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("content") }} >Content</span>}
+            {type === "techstack" ? <span style={{ color: "#1976d2", fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px", cursor: "pointer" }} onClick={() => { setType("techstack") }} >Tech-Stack</span> : <span style={{ cursor: "pointer", color: themeColor.text, fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("techstack") }} >Tech-Stack</span>}
+          </div>}
+          {matches === false ?
+            contentList.length > 0 ?
+              <div className={PS.content}  >
+                {contentList.map((object: any, index: number) => {
+                  let renderContent = <div style={{ color: themeColor.text }}></div>;
+                  switch (object["type"]) {
+                    case "heading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h1>{object["content"]}</h1>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              changeCindex(index);
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "subHeading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h3>{object["content"]}</h3>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "text":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "code":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <div style={{ width: "60%" }}>
+                            <CodeBlockDefaultExample
+                              language={object["language"]}
+                              text={object["content"]}
+                              theme={themeColor.cardBackground}
+                              textc={themeColor.text}
+                            />
+                          </div>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+
+                      break;
+
+                    default:
+                      break;
+                  }
+
+                  return renderContent;
+                })}
+              </div>
+              :
+              <div className={PS.content} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => { setShowAddContent(true) }} >
+                <h3 style={{ color: themeColor.text }} >ADD Content +</h3>
+              </div>
+            :
+
+            type === "content" ? contentList.length > 0 ?
+              <div className={PS.content}  >
+                {contentList.map((object: any, index: number) => {
+                  let renderContent = <div style={{ color: themeColor.text }}></div>;
+                  switch (object["type"]) {
+                    case "heading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h1>{object["content"]}</h1>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              changeCindex(index);
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "subHeading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h3>{object["content"]}</h3>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "text":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+                      break;
+                    case "code":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <div style={{ width: "80%" }}>
+                            <CodeBlockDefaultExample
+                              language={object["language"]}
+                              text={object["content"]}
+                              theme={themeColor.cardBackground}
+                              textc={themeColor.text}
+                            />
+                          </div>{" "}
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setShowAddContent(true);
+                              changeCType(object["type"]);
+                              changeCindex(index);
+                              changeText(object["content"]);
+                            }}
+                          />
+                        </div>
+                      );
+
+                      break;
+
+                    default:
+                      break;
+                  }
+
+                  return renderContent;
+                })}
+              </div>
+              :
+              <div className={PS.content} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => { setShowAddContent(true) }} >
+                <h3 style={{ color: themeColor.text }} >ADD Content +</h3>
+              </div>
+              :
+              stackList.length > 0 ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                {stackList.map(({ type, content, index }) => {
+                  return <Bar text={content} type={type} callBack={() => { deleteStack(index) }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={true} />;
+                })}
+              </div>
+                :
+                <div className={PS.bar} style={{ border: "2px dotted blue", backgroundColor: themeColor.navbackground, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", width: "100%", height: "155px" }} onClick={() => { setShowAddTech(true) }} >
+                  <h3 style={{ color: themeColor.text }} >ADD TECHSTACK +</h3>
+                </div>
 
           }
           <Footer
@@ -826,9 +1099,9 @@ const ProjectScreen = () => {
                   Save
                 </button>
                 <button
-                 onClick={() => {
-                  handleContent(contentType, contentText, contentLanguage,true);
-                }}
+                  onClick={() => {
+                    handleContent(contentType, contentText, contentLanguage, true);
+                  }}
                   style={{
                     height: "30px",
                     width: "20%",
@@ -1007,9 +1280,9 @@ const AddTechStack = ({ close, save, saveMore, id, name, stackName }) => {
             Save
           </button>
           <button
-           onClick={() => {
-            save(techStackName, fieldName, -1,saveMore=true);
-          }}
+            onClick={() => {
+              save(techStackName, fieldName, -1, saveMore = true);
+            }}
             style={{
               height: "30px",
               width: "20%",
@@ -1148,7 +1421,7 @@ const AddDescription = ({ close, save }) => {
           justifyContent: "space-between",
           background: "white",
           height: "auto",
-          width: "40%",
+          width: "60%",
         }}
       >
         <div

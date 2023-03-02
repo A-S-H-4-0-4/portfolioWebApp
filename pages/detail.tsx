@@ -54,7 +54,7 @@ const ProjectScreen = () => {
   const [previewVideo, setPreviewVideo] = useState<string>("");
   const [matches, setMatches] = useState(false);
   const [data, setData] = useState(false);
-
+  const [type, setType] = useState<string>("content");
   const router = useRouter();
   const id = router.query.id;
   const phoneNumber = router.query.phoneNumber;
@@ -139,7 +139,7 @@ const ProjectScreen = () => {
         <Head>
           <title>DETAIL</title>
         </Head>
-        <div className={PS.screen} style={{ background: "white" }}>
+        <div className={PS.screen} style={{ background: themeColor.background}}>
           <ResponsiveAppBar
             callBack={() => {
               if (theme == "light") {
@@ -159,116 +159,228 @@ const ProjectScreen = () => {
           />
 
 
-          <div className={PS.head} style={{ marginTop: "75px" }}>
-            {previewVideo ?
-              <div className={PS.video}  >
-                <Player
-                  playsInline
-                  poster={previewImage}
-                  src={previewVideo}
-                  fluid={false}
-                  height={650}
-                  width={1050}
-                >
-                  <BigPlayButton position="center" />
-                </Player>
-              </div>
-              :
-              <div>
-              </div>
-            }
-            {stackList.length > 0 ? <div className={PS.bar}>
-              {stackList.map(({ type, content }) => {
-                return <Bar text={content} type={type} callBack={()=>{}} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
-              })}
-            </div>
-              :
-              <div  >
-
-              </div>
-            }
-          </div>
-
-          {contentList.length > 0 ? <div className={PS.content}>
-            {contentList.map((object: any, index: number) => {
-              let renderContent = <div style={{ color: "black" }}></div>;
-              switch (object["type"]) {
-                case "heading":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <h1>{object["content"]}</h1>{" "}
-                    </div>
-                  );
-                  break;
-                case "subHeading":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <h3>{object["content"]}</h3>{" "}
-                    </div>
-                  );
-                  break;
-                case "text":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
-                    </div>
-                  );
-                  break;
-                case "code":
-                  renderContent = (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        color: "black",
-                      }}
-                    >
-                      <div style={{ width: "60%" }}>
-                        <CodeBlockDefaultExample
-                          language={object["language"]}
-                          text={object["content"]}
-                          theme="dark"
-                        />
-                      </div>{" "}
-                    </div>
-                  );
-
-                  break;
-
-                default:
-                  break;
+          {matches === false ?
+            <div className={PS.head} style={{marginTop:"80px"}}>
+              {previewVideo &&
+                <div className={PS.video}  >
+                  <Player
+                    playsInline
+                    poster={previewImage}
+                    src={previewVideo}
+                    fluid={false}
+                    height={650}
+                    width={1050}
+                  >
+                    <BigPlayButton position="center" />
+                  </Player>
+                </div>
               }
-
-              return renderContent;
-            })}
-          </div>
+              {stackList.length > 0 && <div className={PS.bar}>
+                {stackList.map(({ type, content, index }) => {
+                  return <Bar text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
+                })}
+              </div>
+              }
+            </div>
             :
             <div  >
-              <h3> </h3>
+              {previewVideo &&
+                <div className={PS.mvideo}  >
+                  <Player
+                    playsInline
+                    poster={previewImage}
+                    src={previewVideo}
+                    fluid={false}
+                    height={250}
+                    width={1000}
+                  >
+                    <BigPlayButton position="center" />
+                  </Player>
+                </div>
+
+              }
             </div>
+          }
+
+          {matches === true &&
+            <div style={{ width: "96%", marginLeft: "2%", display: "flex", alignItems: "center", justifyContent: "space-evenly" }} >
+              {type === "content" ? <span style={{ cursor: "pointer", color: "#1976d2", fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("content") }} >Content</span> : <span style={{ cursor: "pointer", color: themeColor.text, fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("content") }} >Content</span>}
+              {type === "techstack" ? <span style={{ color: "#1976d2", fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px", cursor: "pointer" }} onClick={() => { setType("techstack") }} >Tech-Stack</span> : <span style={{ cursor: "pointer", color: themeColor.text, fontFamily: "monospace", letterSpacing: ".3rem", fontSize: "16px" }} onClick={() => { setType("techstack") }} >Tech-Stack</span>}
+            </div>}
+          {matches === false ?
+            contentList.length > 0 &&
+              <div className={PS.content}  >
+                {contentList.map((object: any, index: number) => {
+                  let renderContent = <div style={{ color: themeColor.text }}></div>;
+                  switch (object["type"]) {
+                    case "heading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h1>{object["content"]}</h1>{" "}
+                
+                        </div>
+                      );
+                      break;
+                    case "subHeading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h3>{object["content"]}</h3>{" "}
+              
+                        </div>
+                      );
+                      break;
+                    case "text":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
+              
+                        </div>
+                      );
+                      break;
+                    case "code":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <div style={{ width: "60%" }}>
+                            <CodeBlockDefaultExample
+                              language={object["language"]}
+                              text={object["content"]}
+                              theme={themeColor.cardBackground}
+                              textc={themeColor.text}
+                            />
+                          </div>{" "}
+              
+                        </div>
+                      );
+
+                      break;
+
+                    default:
+                      break;
+                  }
+
+                  return renderContent;
+                })}
+              </div>
+
+            :
+            type === "content" ? contentList.length > 0 &&
+              <div className={PS.content}  >
+                {contentList.map((object: any, index: number) => {
+                  let renderContent = <div style={{ color: themeColor.text }}></div>;
+                  switch (object["type"]) {
+                    case "heading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h1>{object["content"]}</h1>{" "}
+
+                        </div>
+                      );
+                      break;
+                    case "subHeading":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <h3>{object["content"]}</h3>{" "}
+
+                        </div>
+                      );
+                      break;
+                    case "text":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <p style={{ width: "70%" }}>{object["content"]}</p>{" "}
+
+                        </div>
+                      );
+                      break;
+                    case "code":
+                      renderContent = (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: themeColor.text,
+                          }}
+                        >
+                          <div style={{ width: "80%" }}>
+                            <CodeBlockDefaultExample
+                              language={object["language"]}
+                              text={object["content"]}
+                              theme={themeColor.cardBackground}
+                              textc={themeColor.text}
+                            />
+                          </div>{" "}
+
+                        </div>
+                      );
+
+                      break;
+
+                    default:
+                      break;
+                  }
+
+                  return renderContent;
+                })}
+              </div>
+
+              :
+              stackList.length > 0 && <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                {stackList.map(({ type, content, index }) => {
+                  return <Bar text={content} type={type} callBack={() => { }} backgroundColor={themeColor.navbackground} textColor={themeColor.text} deleteIcon={false} />;
+                })}
+              </div>
+
 
           }
+          
           <Footer
             textColor={themeColor.text}
             iconColor={themeColor.iconColor}
