@@ -18,6 +18,7 @@ const instance = axios.create({
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
+   
   },
 });
 
@@ -83,6 +84,7 @@ export const callAPI = async (
         response = await instance.get(BaseUrl + API, {
           headers: {
             session: session,
+            "Access-Control-Allow-Origin": "*", 
           },
         });
         data = responseBody(response);
@@ -93,6 +95,7 @@ export const callAPI = async (
         response = await instance.post(API, body, {
           headers: {
             session: session,
+            "Access-Control-Allow-Origin": "*", 
           },
         });
         data = responseBody(response);
@@ -102,6 +105,7 @@ export const callAPI = async (
         response = await instance.put(API, body, {
           headers: {
             session: session,
+            "Access-Control-Allow-Origin": "*", 
           },
         });
         data = responseBody(response);
@@ -111,6 +115,7 @@ export const callAPI = async (
         response = await instance.delete(API,{
           headers: {
             session: session,
+            "Access-Control-Allow-Origin": "*", 
           },
         });
         data = responseBody(response);
